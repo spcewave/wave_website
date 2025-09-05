@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPCE WAVE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+    :root {
+        --text-color: #e0e0e0;
+        --bg-color: #010108;
+        --accent-color: #3a86ff;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+        overflow-x: hidden;
+    }
+
+    /* 3D CANVAS & UI */
+    #webgl-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        outline: none;
+        z-index: 1;
+    }
+
+    .ui-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+        pointer-events: none;
+        backdrop-filter: blur(10px);
+        flex-wrap: wrap;
+    }
+
+    .ui-overlay a {
+        color: var(--text-color);
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: 400;
+        pointer-events: all;
+        padding: 8px 12px;
+        transition: color 0.3s ease;
+    }
+
+    .ui-overlay a:hover {
+        color: var(--accent-color);
+    }
+
+    .ui-overlay a.button {
+        border: 1px solid var(--text-color);
+        border-radius: 20px;
+        transition: background 0.3s ease;
+    }
+
+    .ui-overlay a.button:hover {
+        background: rgba(58, 134, 255, 0.2);
+    }
+
+    /* MAIN SCROLLING CONTENT */
+    main {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+    }
+
+    .section {
+        min-height: 100vh;
+        width: 100%;
+        padding: 100px 10%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+    }
+
+    .content {
+        max-width: 900px;
+    }
+
+    h1 {
+        font-size: clamp(3rem, 10vw, 7rem);
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    h2 {
+        font-size: clamp(2.5rem, 8vw, 5rem);
+        font-weight: 900;
+        line-height: 1.1;
+        text-transform: uppercase;
+        color: #184baa;
+    }
+
+    .hero-section p {
+        font-size: 1.4rem;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 20px;
+        color: #aaa;
+    }
+
+    .large-p {
+        font-size: 1.5rem;
+        line-height: 1.6;
+        max-width: 600px;
+    }
+
+    /* SPECIFIC SECTION STYLES */
+    .info-section {
+        justify-content: flex-start;
+        padding-top: 15vh;
+    }
+
+    .info-box {
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        max-width: 350px;
+    }
+
+    .info-box h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding-bottom: 10px;
+    }
+
+    .info-box ul {
+        list-style: none;
+    }
+
+    .info-box li {
+        display: flex;
+        justify-content: space-between;
+        font-size: 1rem;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+
+    .info-box li span {
+        font-weight: 400;
+        color: #aaa;
+    }
+
+    /* Tall sections for scroll */
+    .title-only-section,
+    .tech-section,
+    .diagram-section {
+        min-height: 150vh;
+    }
+
+    /* LOADER */
+    #loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--bg-color);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: opacity 0.5s ease;
+    }
+
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    #loader p {
+        margin-top: 20px;
+        color: #aaa;
+        font-size: 1rem;
+        letter-spacing: 1px;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .spce-wave {
+        padding-left: 40vw;
+    }
+
+    .content-wave {
+        max-width: 900px;
+        display: flex;
+        flex-direction: column;
+        align-items: last baseline;
+    }
+
+    .logo-img {
+        width: 80px;
+    }
+
+    /* HAMBURGER MENU */
+    .hamburger {
+        display: none;
+        font-size: 24px;
+        color: var(--text-color);
+        cursor: pointer;
+        pointer-events: all;
+        padding: 8px 12px;
+        transition: color 0.3s ease;
+        order: 2;
+    }
+
+    .hamburger:hover {
+        color: var(--accent-color);
+    }
+
+    .vbp-header-menu-button__svg {
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        transform: scaleX(-1);
+        display: none;
+    }
+
+    .vbp-header-menu-button__svg line {
+        stroke: var(--text-color);
+        stroke-width: 3px;
+        stroke-dasharray: 100%;
+        stroke-dashoffset: 0%;
+        transition: transform 0.3s, stroke-dashoffset .4s;
+        transform-origin: center;
+    }
+
+    .vbp-header-menu-button__svg .top {
+        transform: translateY(-35%);
+    }
+
+    .vbp-header-menu-button__svg .middle {
+        transition: opacity .3s, transform .3s;
+    }
+
+    .vbp-header-menu-button__svg .bottom {
+        transform: translateY(33%);
+        stroke-dashoffset: 9px;
+    }
+
+    body.menu-open .vbp-header-menu-button__svg .top {
+        transform: rotate(45deg);
+        stroke-linecap: round;
+    }
+
+    body.menu-open .vbp-header-menu-button__svg .middle {
+        transform: scaleX(0.1);
+        opacity: 0;
+    }
+
+    body.menu-open .vbp-header-menu-button__svg .bottom {
+        transform: rotate(-45deg);
+        stroke-linecap: round;
+        stroke-dashoffset: 0%;
+    }
+
+    /* NAVIGATION MENU */
+    .nav-menu {
+        display: flex;
+        gap: 15px;
+    }
+
+    /* CONTACT SECTION */
+    .contact-section {
+        background: transparent;
+        padding: 100px 10%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .contact-container {
+        width: 100%;
+        max-width: 1200px;
+        text-align: center;
+    }
+
+    .contact-heading {
+        font-size: clamp(2rem, 6vw, 4rem);
+        font-weight: 900;
+        color: var(--accent-color);
+        text-transform: uppercase;
+        margin-bottom: 60px;
+        position: relative;
+    }
+
+    .contact-heading::after {
+        content: "";
+        display: block;
+        width: 80px;
+        height: 3px;
+        background: var(--accent-color);
+        margin: 15px auto 0;
+        border-radius: 2px;
+    }
+
+    .contact-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 40px;
+    }
+
+    .contact-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 30px;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .contact-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 0 25px rgba(58, 134, 255, 0.3);
+    }
+
+    .contact-card i {
+        font-size: 2rem;
+        color: var(--accent-color);
+        margin-bottom: 20px;
+    }
+
+    .contact-card h3 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        color: #fff;
+    }
+
+    .contact-card p,
+    .contact-card a {
+        font-size: 1rem;
+        color: #ccc;
+        text-decoration: none;
+        line-height: 1.6;
+    }
+
+    .contact-card a:hover {
+        color: var(--accent-color);
+    }
+
+    .social-links {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .social {
+        font-size: 1.5rem;
+        width: 45px;
+        height: 45px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .social:hover {
+        transform: scale(1.1);
+        background: var(--accent-color);
+        color: #fff;
+    }
+
+    /* SLIDER */
+    .slider {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 150%;
+        overflow: hidden;
+    }
+
+    .slider-items {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        animation: scrolling 20s linear infinite;
+    }
+
+    .slider-items img {
+        height: 5rem;
+        margin: 20px;
+    }
+
+    /* FOOTER */
+    .footer {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #000000 100%);
+        backdrop-filter: blur(10px);
+        color: white;
+        padding: 50px 0;
+        position: relative;
+        z-index: 10;
+    }
+
+    .footer-content {
+        position: relative;
+        z-index: 2;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .footer-top {
+        display: grid;
+        grid-template-columns: 1fr 1fr 2fr;
+        gap: 40px;
+        margin-bottom: 30px;
+    }
+
+    .footer-section h3 {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+        color: #fff;
+        position: relative;
+    }
+
+    .footer-section h3::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background: #00c8ff;
+        border-radius: 2px;
+    }
+
+    .footer-section p,
+    .footer-section li {
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 8px;
+    }
+
+    .footer-section ul {
+        list-style: none;
+    }
+
+    .footer-section ul li {
+        margin-bottom: 10px;
+    }
+
+    .footer-section ul li a {
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .footer-section ul li a:hover {
+        color: #00c8ff;
+        transform: translateX(5px);
+    }
+
+    .contact-info {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 18px;
+        padding: 8px 0;
+    }
+
+    .contact-info i {
+        margin-right: 15px;
+        width: 24px;
+        font-size: 1.2rem;
+        color: #00c8ff;
+        margin-top: 2px;
+    }
+
+    .contact-info span {
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .social-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .social-link:hover {
+        background: #00c8ff;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+    }
+
+    .social-link i {
+        font-size: 1.2rem;
+    }
+
+    .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        padding-top: 25px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .footer-bottom-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .footer-links {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .footer-links a {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+        color: #00c8ff;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .logo-img {
+            width: 50px;
+        }
+
+        .section {
+            padding: 80px 5%;
+        }
+
+        .large-p {
+            font-size: 1rem;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+        }
+
+        .vm-grid {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .hamburger {
+            display: block;
+        }
+
+        .vbp-header-menu-button__svg {
+            display: block;
+        }
+
+        .nav-menu {
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            background: rgba(10, 10, 20, 0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 999;
+            min-width: 180px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-menu.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .nav-menu a {
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+            text-align: center;
+        }
+
+        @keyframes scrolling {
+            0% { transform: translateX(80%); }
+            100% { transform: translateX(-20%); }
+        }
+    }
+</style>
+
+</head>
+
+<body>
+    <canvas id="webgl-canvas"></canvas>
+    <div class="ui-overlay">
+        <a href="/index.html" class="top-link"><img src="logo.png" class="logo-img" alt="SPCE WAVE Logo"></a>
+        <div class="hamburger">
+            <svg class="vbp-header-menu-button__svg" id="hamburger" role="button" aria-label="Toggle navigation menu">
+                <line x1="0" y1="50%" x2="100%" y2="50%" class="top" shape-rendering="crispEdges" />
+                <line x1="0" y1="50%" x2="100%" y2="50%" class="middle" shape-rendering="crispEdges" />
+                <line x1="0" y1="50%" x2="100%" y2="50%" class="bottom" shape-rendering="crispEdges" />
+            </svg>
+        </div>
+        <div class="nav-menu">
+            <a href="/index.html" class="top-link">Home</a>
+            <a href="/legacy.html" class="top-link">Our Legacy</a>
+            <a href="/team.html" class="top-link">Team</a>
+            <a href="/gallery.html" class="top-link">Gallery</a>
+            <a href="/sponsors.html" class="top-link">Sponsors</a>
+            <a href="/contact.html" class="top-link">Contact Us</a>
+        </div>
+        <a href="/support.html" class="top-link button">Support Us</a>
+    </div>
+    
+    <div class="main-content">
+        <main id="scroll-container">
+            <section class="section hero-section">
+                <div class="content">
+                    <h1>Wing of<br>Aerial<br>Vehicle<br>Engineers</h1>
+                    <p>WAVE: The Official Aero Club of SPCE, Mumbai</p>
+                </div>
+            </section>
+
+            <section class="section text-section">
+                <div class="content">
+                    <h2>ABOUT SPCE</h2>
+                    <p class="large-p">
+                        Bharatiya Vidya Bhavan's Sardar Patel College Of Engineering (SPCE), one of the highest-ranking
+                        colleges in Maharashtra, is a Government-aided autonomous college established in 1962.
+                        Over the last 50 years, the college has gained an excellent reputation in technical education
+                        and has received a Grade 'A' rating from the Government of Maharashtra.
+                    </p>
+                </div>
+            </section>
+
+            <section class="section text-section spce-wave">
+                <div class="content-wave">
+                    <h2>About WAVE</h2>
+                    <p class="large-p">
+                        WAVE is a student organization established in 2017, bringing together students who are passionate about aeromodelling and aerodynamics. Our club focuses on the development of model aircraft and rockets, providing hands-on experience that complements academic learning.
+<br>We begin by conceptualizing and visualizing different models while analyzing their aerodynamic properties. This foundation leads to the design, optimization, and manufacturing phases.
+We focus on creating a learning environment where technical knowledge and practical experience are passed forward to future students, ensuring continuous growth and innovation within our club.
+                    </p>
+                </div>
+            </section>
+
+            <section class="section text-section">
+                <div class="content">
+                    <h2>Vision</h2>
+                    <ul class="large-p">
+                        <li>To represent India across the globe at international aero-modelling competitions and bring
+                            laurels to the country.</li>
+                        <li>To spread knowledge about UAVs and ignite passion within the youth.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section text-section">
+                <div class="content">
+                    <h2>Mission</h2>
+                    <ul class="large-p">
+                        <li>To build more efficient aircraft while spreading UAV knowledge amongst youngsters.</li>
+                        <li>To innovate new designs for implementation in the industry.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section text-section" id="sponsors">
+                <div class="content">
+                    <h2>Our Sponsors</h2>
+                    <div class="slider">
+                        <div class="slider-items">
+                            <img src="hp_logo.png" alt="HP">
+                            <img src="solidwords_logo.png" alt="SolidWorks">
+                            <img src="mathworks_logo.png" alt="MathWorks">
+                            <img src="protomont_logo.png" alt="promtomont">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-top">
+                <!-- Follow Us -->
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <p>Stay connected with us on social media for updates, events, and exciting club activities!</p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/spcew.a.v.e/" class="social-link" aria-label="Instagram">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="https://in.linkedin.com/company/spce-w-a-v-e" class="social-link" aria-label="LinkedIn">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://www.facebook.com/SPCEWAVE/" class="social-link" aria-label="Facebook">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@spcewave6765" class="social-link" aria-label="YouTube">
+                            <i class="fa-brands fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="/index.html">Home</a></li>
+                        <li><a href="/team.html">Team</a></li>
+                        <li><a href="/gallery.html">Gallery</a></li>
+                        <li><a href="/sponsors.html">Sponsors</a></li>
+                        <li><a href="/support.html">Support Us</a></li>
+                        <li><a href="/legacy.html">Our Legacy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <div class="contact-info">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span>spcewave@spce.in</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fa-solid fa-phone"></i>
+                        <span>+91 99206 35938
+                            
+                        </span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>Sardar Patel College of Engineering<br>Bhavan's Campus <br>Andheri (W), Mumbai - 400058</span>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <div>
+                        <p style="text-align: center;">&copy; 2025 SPCE WAVE. All rights reserved.<br></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="loader">
+        <div class="spinner"></div>
+        <p>Initializing Flight Systems...</p>
+    </div>
+
+    <!-- Updated Three.js and OBJLoader imports -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/MTLLoader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+
+    <!-- The Font Awesome Kit URL you used requires a valid kit token and account access. 
+         If you see "Forbidden", your kit token may be invalid or restricted. 
+         For public usage, use the official CDN below (no account needed): -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script>
+        // Initialize scene with OBJLoader
+        initScene();
+
+        function initScene() {
+            // Register GSAP Plugin
+            gsap.registerPlugin(ScrollTrigger);
+
+            // --- Basic Setup ---
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({
+                canvas: document.querySelector('#webgl-canvas'),
+                antialias: true,
+                alpha: true
+            });
+
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.position.setZ(30);
+
+            // --- Asset Loading ---
+            const loadingManager = new THREE.LoadingManager();
+            const textureLoader = new THREE.TextureLoader(loadingManager);
+            const loaderElement = document.getElementById('loader');
+
+            let assetsLoaded = false;
+            let scrollAnimationsCreated = false;
+
+            loadingManager.onLoad = () => {
+                assetsLoaded = true;
+                // Hide loader and start animations once everything is loaded
+                gsap.to(loaderElement, { opacity: 0, duration: 1, onComplete: () => loaderElement.style.display = 'none' });
+
+                // Animate in the first section's content
+                gsap.from(".hero-section .content", {
+                    opacity: 0,
+                    y: 50,
+                    duration: 1.5,
+                    delay: 0.5
+                });
+
+                // Create scroll animations after assets are loaded
+                if (!scrollAnimationsCreated) {
+                    createScrollAnimations();
+                    scrollAnimationsCreated = true;
+                }
+            };
+
+            // --- Lights ---
+            const pointLight = new THREE.PointLight(0xffffff, 1.2);
+            pointLight.position.set(5, 5, 25);
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(pointLight, ambientLight);
+
+            // --- 3D Objects ---
+
+            // Starfield
+            const starVertices = [];
+            for (let i = 0; i < 10000; i++) {
+                const x = (Math.random() - 0.5) * 2000;
+                const y = (Math.random() - 0.5) * 2000;
+                const z = (Math.random() - 0.5) * 2000;
+                starVertices.push(x, y, z);
+            }
+            const starGeometry = new THREE.BufferGeometry();
+            starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+            const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.7 });
+            const stars = new THREE.Points(starGeometry, starMaterial);
+            scene.add(stars);
+
+            // Earth with better texture sources and fallbacks
+            const earthGeometry = new THREE.SphereGeometry(15, 64, 64);
+            let earthMaterial, cloudMaterial;
+            let earth, clouds;
+
+            // Try multiple Earth texture sources
+            const earthTextureSources = [
+                'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/textures/planets/earth_atmos_2048.jpg',
+                'https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg',
+                'https://raw.githubusercontent.com/mrdoob/three.js/r128/examples/textures/planets/earth_atmos_2048.jpg'
+            ];
+
+            const cloudTextureSources = [
+                'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/textures/planets/earth_clouds_1024.png',
+                'https://threejs.org/examples/textures/planets/earth_clouds_1024.png',
+                'https://raw.githubusercontent.com/mrdoob/three.js/r128/examples/textures/planets/earth_clouds_1024.png'
+            ];
+
+            // Create fallback materials
+            function createFallbackEarth() {
+                // Create a blue-green earth-like material
+                const canvas = document.createElement('canvas');
+                canvas.width = canvas.height = 256;
+                const context = canvas.getContext('2d');
+
+                // Create a gradient that looks earth-like
+                const gradient = context.createLinearGradient(0, 0, 256, 256);
+                gradient.addColorStop(0, '#1e3c72');
+                gradient.addColorStop(0.3, '#2a5298');
+                gradient.addColorStop(0.5, '#0f4c75');
+                gradient.addColorStop(0.7, '#3282b8');
+                gradient.addColorStop(1, '#0f3460');
+
+                context.fillStyle = gradient;
+                context.fillRect(0, 0, 256, 256);
+
+                // Add some random noise for continents
+                context.fillStyle = '#2d5016';
+                for (let i = 0; i < 50; i++) {
+                    context.beginPath();
+                    context.arc(
+                        Math.random() * 256,
+                        Math.random() * 256,
+                        Math.random() * 20 + 5,
+                        0, Math.PI * 2
+                    );
+                    context.fill();
+                }
+
+                const texture = new THREE.CanvasTexture(canvas);
+                return new THREE.MeshStandardMaterial({
+                    map: texture,
+                    bumpScale: 0.1,
+                    transparent: true,  // Enable transparency for animations
+                    opacity: 1
+                });
+            }
+
+            // Try to load Earth texture with fallback
+            let earthTextureLoaded = false;
+            let earthTextureIndex = 0;
+
+            function tryLoadEarthTexture() {
+                if (earthTextureIndex >= earthTextureSources.length) {
+                    console.warn('All Earth texture sources failed, using procedural texture');
+                    earthMaterial = createFallbackEarth();
+                    earth = new THREE.Mesh(earthGeometry, earthMaterial);
+                    // Ensure material is ready for animations
+                    earth.material.transparent = true;
+                    earth.material.opacity = 1;
+                    scene.add(earth);
+                    return;
+                }
+
+                const earthTexture = textureLoader.load(
+                    earthTextureSources[earthTextureIndex],
+                    // onLoad
+                    (texture) => {
+                        console.log('Earth texture loaded successfully from source', earthTextureIndex);
+                        earthMaterial = new THREE.MeshStandardMaterial({
+                            map: texture,
+                            bumpScale: 0.2
+                        });
+                        earth = new THREE.Mesh(earthGeometry, earthMaterial);
+                        scene.add(earth);
+                        earthTextureLoaded = true;
+                    },
+                    // onProgress
+                    undefined,
+                    // onError
+                    (error) => {
+                        console.warn(`Earth texture source ${earthTextureIndex} failed:`, error);
+                        earthTextureIndex++;
+                        tryLoadEarthTexture();
+                    }
+                );
+            }
+
+            // Start loading Earth texture
+            tryLoadEarthTexture();
+
+            // Cloud Layer with fallback
+            const cloudGeometry = new THREE.SphereGeometry(15.2, 64, 64);
+            let cloudTextureLoaded = false;
+            let cloudTextureIndex = 0;
+
+            function createFallbackClouds() {
+                // Create a simple semi-transparent white material for clouds
+                return new THREE.MeshStandardMaterial({
+                    color: 0xffffff,
+                    transparent: true,
+                    opacity: 0.15,
+                    side: THREE.DoubleSide,
+                    depthWrite: false  // Helps with transparency rendering
+                });
+            }
+
+            function tryLoadCloudTexture() {
+                if (cloudTextureIndex >= cloudTextureSources.length) {
+                    console.warn('All cloud texture sources failed, using simple white clouds');
+                    cloudMaterial = createFallbackClouds();
+                    clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
+                    // Ensure material is ready for animations
+                    clouds.material.transparent = true;
+                    clouds.material.opacity = 0.3;
+                    scene.add(clouds);
+                    return;
+                }
+
+                const cloudTexture = textureLoader.load(
+                    cloudTextureSources[cloudTextureIndex],
+                    // onLoad
+                    (texture) => {
+                        console.log('Cloud texture loaded successfully from source', cloudTextureIndex);
+                        cloudMaterial = new THREE.MeshStandardMaterial({
+                            map: texture,
+                            transparent: true,
+                            opacity: 0.3
+                        });
+                        clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
+                        scene.add(clouds);
+                        cloudTextureLoaded = true;
+                    },
+                    // onProgress
+                    undefined,
+                    // onError
+                    (error) => {
+                        console.warn(`Cloud texture source ${cloudTextureIndex} failed:`, error);
+                        cloudTextureIndex++;
+                        tryLoadCloudTexture();
+                    }
+                );
+            }
+
+            // Start loading cloud texture
+            tryLoadCloudTexture();
+
+            // --- Plane Model with Multiple Materials ---
+            let planeModel;
+
+            // Load all texture maps for different materials
+            const textureMaps = {
+                // Color/Diffuse maps
+                color1: textureLoader.load('material58.png'),
+                color2: textureLoader.load('material60.png'),
+                color3: textureLoader.load('material62.png'),
+                color4: textureLoader.load('material64.png'),
+                color5: textureLoader.load('material66.png'),
+                color6: textureLoader.load('material68.png'),
+
+                // Normal maps
+                normal1: textureLoader.load('normalMap1.png'),
+                normal2: textureLoader.load('normalMap2.png'),
+                normal3: textureLoader.load('normalMap3.png'),
+                normal4: textureLoader.load('normalMap4.png'),
+                normal5: textureLoader.load('normalMap5.png'),
+                normal6: textureLoader.load('normalMap6.png'),
+
+                // Metalness maps
+                metalness1: textureLoader.load('metalnessMap1.png'),
+                metalness2: textureLoader.load('metalnessMap2.png'),
+                metalness3: textureLoader.load('metalnessMap3.png'),
+                metalness4: textureLoader.load('metalnessMap4.png'),
+                metalness5: textureLoader.load('metalnessMap5.png'),
+                metalness6: textureLoader.load('metalnessMap6.png')
+            };
+
+            // Set texture properties for all loaded textures
+            Object.values(textureMaps).forEach(texture => {
+                if (texture) {
+                    texture.flipY = false; // Important for OBJ models
+                    texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
+                }
+            });
+
+            // Create fallback materials array for manual assignment if needed
+            const fallbackMaterials = [
+                new THREE.MeshStandardMaterial({
+                    map: textureMaps.color1,
+                    normalMap: textureMaps.normal1,
+                    metalnessMap: textureMaps.metalness1,
+                    metalness: 0.7,
+                    roughness: 0.3
+                }),
+                new THREE.MeshStandardMaterial({
+                    map: textureMaps.color2,
+                    normalMap: textureMaps.normal2,
+                    metalnessMap: textureMaps.metalness2,
+                    metalness: 0.8,
+                    roughness: 0.4
+                }),
+                new THREE.MeshStandardMaterial({
+                    map: textureMaps.color3,
+                    normalMap: textureMaps.normal3,
+                    metalnessMap: textureMaps.metalness3,
+                    metalness: 0.6,
+                    roughness: 0.5
+                }),
+                new THREE.MeshStandardMaterial({
+                    map: textureMaps.color4,
+                    normalMap: textureMaps.normal4,
+                    metalnessMap: textureMaps.metalness4,
+                    metalness: 0.9,
+                    roughness: 0.2
+                }),
+                new THREE.MeshStandardMaterial({
+                    map: textureMaps.color5,
+                    normalMap: textureMaps.normal5,
+                    metalnessMap: textureMaps.metalness5,
+                    metalness: 0.7,
+                    roughness: 0.4
+                }),
+                new THREE.MeshStandardMaterial({
+                    map: textureMaps.color6,
+                    normalMap: textureMaps.normal6,
+                    metalnessMap: textureMaps.metalness6,
+                    metalness: 0.8,
+                    roughness: 0.3
+                })
+            ];
+
+
+            // Create fallback plane geometry
+            function createFallbackPlane() {
+                const planeGeometry = new THREE.BoxGeometry(2, 0.2, 4);
+                const fallbackMaterial = new THREE.MeshStandardMaterial({
+                    color: 0x4a90e2,
+                    metalness: 0.7,
+                    roughness: 0.3
+                });
+
+                const fallbackPlane = new THREE.Mesh(planeGeometry, fallbackMaterial);
+
+                // Add simple wings
+                const wingGeometry = new THREE.BoxGeometry(4, 0.1, 1);
+                const wingMaterial = new THREE.MeshStandardMaterial({
+                    color: 0x4a90e2,
+                    metalness: 0.7,
+                    roughness: 0.3
+                });
+
+                const leftWing = new THREE.Mesh(wingGeometry, wingMaterial);
+                const rightWing = new THREE.Mesh(wingGeometry, wingMaterial);
+
+                leftWing.position.set(-1, 0, 0);
+                rightWing.position.set(1, 0, 0);
+
+                fallbackPlane.add(leftWing, rightWing);
+
+                return fallbackPlane;
+            }
+            const mtlLoader = new THREE.MTLLoader();
+            mtlLoader.load('plane/plane.mtl', (materials) => {
+                materials.preload();
+                objLoader.setMaterials(materials);
+                objLoader.load('plane/plane.obj', (object) => {
+                    planeModel = object;
+                    planeModel.scale.set(0.1, 0.1, 0.1);
+                    planeModel.visible = false;
+                    scene.add(planeModel);
+                });
+            });
+
+
+            // Load OBJ model with proper texture application
+            const objLoader = new THREE.OBJLoader(loadingManager);
+
+            objLoader.load(
+                'plane.obj',
+                // onLoad callback
+                (object) => {
+                    planeModel = object;
+                    console.log('Plane model loaded successfully');
+
+                    // Apply textured material to all meshes in the model
+                    planeModel.traverse((child) => {
+                        if (child instanceof THREE.Mesh) {
+                            child.material = planeMaterial;
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                        }
+                    });
+
+                    // Set initial properties
+                    planeModel.scale.set(0.1, 0.1, 0.1);
+                    planeModel.position.set(0, 0, 0);
+                    planeModel.visible = false;
+
+                    // Store original scale for animations
+                    planeModel.userData.originalScale = 0.1;
+
+                    scene.add(planeModel);
+                },
+                // onProgress callback
+                (xhr) => {
+                    if (xhr.lengthComputable) {
+                        const percentComplete = xhr.loaded / xhr.total * 100;
+                        console.log('Plane model: ' + Math.round(percentComplete, 2) + '% loaded');
+                    }
+                },
+                // onError callback - use fallback
+                (error) => {
+                    console.error('Failed to load plane.obj model:', error);
+                    planeModel = createFallbackPlane();
+                    planeModel.scale.set(2, 2, 2);
+                    planeModel.position.set(0, 0, 0);
+                    planeModel.visible = false;
+                    planeModel.userData.originalScale = 2;
+                    scene.add(planeModel);
+                }
+            );
+
+            // --- Animate Loop ---
+            function animate() {
+                requestAnimationFrame(animate);
+
+                // Continuous rotations
+                if (earth) earth.rotation.y += 0.0005;
+                if (clouds) clouds.rotation.y += 0.0007;
+                stars.rotation.y += 0.0001;
+
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // --- GSAP Scroll-Triggered Animations ---
+            function createScrollAnimations() {
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: ".main-content",
+                        start: "top top",
+                        end: "bottom bottom",
+                        scrub: 1.5,
+                        onUpdate: (self) => {
+                            // Handle Earth/Plane visibility based on scroll position
+                            const progress = self.progress;
+
+                            // Show Earth for first 3 sections (0 to ~0.5)
+                            if (progress < 0.5) {
+                                if (earth && !earth.parent) {
+                                    scene.add(earth);
+                                    console.log('Earth restored to scene');
+                                }
+                                if (clouds && !clouds.parent) {
+                                    scene.add(clouds);
+                                    console.log('Clouds restored to scene');
+                                }
+                                if (planeModel && planeModel.visible) {
+                                    planeModel.visible = false;
+                                    console.log('Plane hidden for Earth view');
+                                }
+                            }
+                            // Show plane for sections 4-6 (0.5 to 1.0) - ends with sponsors
+                            else {
+                                if (earth && earth.parent) {
+                                    scene.remove(earth);
+                                    console.log('Earth removed for plane view');
+                                }
+                                if (clouds && clouds.parent) {
+                                    scene.remove(clouds);
+                                    console.log('Clouds removed for plane view');
+                                }
+                                if (planeModel && !planeModel.visible) {
+                                    planeModel.visible = true;
+                                    console.log('Plane shown for plane sections');
+                                }
+                            }
+                        },
+                        onComplete: () => {
+                            // Ensure plane is hidden when animation completes
+                            if (planeModel) {
+                                planeModel.visible = false;
+                                console.log('Plane hidden after animation completion');
+                            }
+                            // Reset camera for footer
+                            gsap.to(camera.position, { x: 0, y: 0, z: 30, duration: 1 });
+                        }
+                    }
+                });
+
+                // Start: Initial view of Earth
+                tl.to(camera.position, { z: 30, duration: 1 })
+
+                    // Section 2: Zoom into Earth (About SPCE)
+                    .to(camera.position, { x: -5, y: 15, z: 20, duration: 2 }, 'scene2')
+                    .to(earth ? earth.rotation : { x: 0, y: 0, z: 0 }, { y: "+=3", duration: 2 }, 'scene2')
+
+                    // Section 3: Pan around Earth (About WAVE)
+                    .to(camera.position, { x: 0, y: 0, z: 40, duration: 2 }, 'scene3')
+                    .to(earth ? earth.rotation : { x: 0, y: 0, z: 0 }, { y: "+=1", duration: 2 }, 'scene3')
+
+                    // Section 4: Transition to Plane model (Vision)
+                    .fromTo(planeModel ? planeModel.scale : { x: 0, y: 0, z: 0 },
+                        { x: 0.01, y: 0.01, z: 0.01 },
+                        { x: 0.3, y: 0.3, z: 0.3, duration: 2 }, 'scene4')
+                    .to(camera.position, { x: 100, y: 50, z: 200, duration: 2 }, 'scene4')
+                    .to(planeModel ? planeModel.rotation : { x: 0, y: 0, z: 0 },
+                        { x: 0, y: Math.PI * 0.5, z: 0, duration: 2 }, 'scene4')
+
+                    // Section 5: Show different angles (Mission)
+                    .to(planeModel ? planeModel.rotation : { x: 0, y: 0, z: 0 },
+                        { x: 0, y: Math.PI, z: 0, duration: 3 }, 'scene5')
+                    .to(camera.position, { x: 150, y: 50, z: 300, duration: 3 }, 'scene5')
+
+                    // Section 6: Final plane showcase (Sponsors) - end animation here
+                    .to(planeModel ? planeModel.rotation : { x: 0, y: 0, z: 0 },
+                        { x: Math.PI * 0.1, y: Math.PI * 1.5, z: 0, duration: 3 }, 'scene6')
+                    .to(camera.position, { x: 0, y: 100, z: 250, duration: 3 }, 'scene6')
+                    .to(planeModel ? planeModel.scale : { x: 0, y: 0, z: 0 },
+                        { x: 0.4, y: 0.4, z: 0.4, duration: 2 }, 'scene6')
+                    // Section 7: Final smooth rotation - keep plane right-side up
+                    .to(planeModel ? planeModel.rotation : { x: 0, y: 0, z: 0 },
+                        { x: 0, y: Math.PI * 2, z: 0, duration: 4 }, 'scene7')
+                    .to(camera.position, { x: 100, y: 170, z: 300, duration: 4 }, 'scene7')
+                    .to(planeModel ? planeModel.scale : { x: 0, y: 0, z: 0 },
+                        { x: 0.25, y: 0.25, z: 0.25, duration: 2 }, 'scene7');
+                console.log('Scroll animations created - ends with sponsors section');
+            }
+
+            // Create animations after a short delay to ensure everything is set up
+            if (!scrollAnimationsCreated) {
+                setTimeout(() => {
+                    if (!scrollAnimationsCreated) {
+                        createScrollAnimations();
+                        scrollAnimationsCreated = true;
+                    }
+                }, 1000);
+            }
+
+            // --- Window Resize Handler ---
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        // Hamburger Menu Toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+
+        hamburger.addEventListener('click', () => {
+            document.body.classList.toggle('menu-open');
+            navMenu.classList.toggle('active');
+            navMenu.classList.toggle('collapsed');
+        });
+
+        // Close menu when clicking a nav link on mobile
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    document.body.classList.remove('menu-open');
+                    navMenu.classList.remove('active');
+                    navMenu.classList.add('collapsed');
+                }
+            });
+        });
+
+        // Close menu when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 && !navMenu.contains(e.target) && !hamburger.contains(e.target)) {
+                document.body.classList.remove('menu-open');
+                navMenu.classList.remove('active');
+                navMenu.classList.add('collapsed');
+            }
+        });
+    </script>
+    <script src="https://kit.fontawesome.com/2f3e6f5b15.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

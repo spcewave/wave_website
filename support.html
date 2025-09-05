@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPCE WAVE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Global Reset & Variables */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --text-color: #e0e0e0;
+            --bg-color: #010108;
+            --accent-color: #3a86ff;
+        }
+
+        body {
+            background: radial-gradient(circle at top left, rgba(58,134,255,0.15), transparent 70%),
+                        radial-gradient(circle at bottom right, rgba(0,255,200,0.1), transparent 70%),
+                        var(--bg-color);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        #webgl-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            outline: none;
+            z-index: 1;
+        }
+
+        main { position: relative; z-index: 10; width: 100%; }
+        .section {
+            min-height: 100vh;
+            width: 100%;
+            padding: 100px 10%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 8vw, 4rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin: 20px 0 10px;
+            text-align: center;
+        }
+
+        .large-p {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            line-height: 1.6;
+            text-align: center;
+            margin: 10px auto 20px;
+            max-width: 900px;
+        }
+
+        .donation-box {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .donation-box img {
+            width: 220px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(58,134,255,0.5);
+        }
+
+        .account-details {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        /* Overlay, Nav, Loader same as your original */
+        .ui-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; padding: 10px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 100; pointer-events: none; backdrop-filter: blur(10px);
+        }
+        .ui-overlay a { color: var(--text-color); text-decoration: none; font-size: 18px; font-weight: 400; pointer-events: all; padding: 8px 12px; transition: color 0.3s ease; }
+        .ui-overlay a:hover { color: var(--accent-color); }
+        .ui-overlay a.button { border: 1px solid var(--text-color); border-radius: 20px; transition: background 0.3s ease; }
+        .ui-overlay a.button:hover { background: rgba(58, 134, 255, 0.2); }
+        .logo-img { width: 80px; }
+
+        #loader {
+            position: fixed; inset: 0; background: var(--bg-color); z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        .spinner { width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.3); border-top-color: var(--text-color); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+    <div class="ui-overlay">
+        <a href="/index.html" class="top-link"><img src="logo.png" class="logo-img" alt="SPCE WAVE Logo"></a>
+        <div class="nav-menu">
+            <a href="/index.html" class="top-link">Home</a>
+            <a href="/legacy.html" class="top-link">Our Legacy</a>
+            <a href="/team.html" class="top-link">Team</a>
+            <a href="/gallery.html" class="top-link">Gallery</a>
+            <a href="/sponsors.html" class="top-link">Sponsors</a>
+            <a href="/contact.html" class="top-link">Contact Us</a>
+        </div>
+        <a href="#crowdfunding" class="top-link button">Support Us</a>
+    </div>
+
+    <div id="loader">
+        <div class="spinner"></div>
+        <p>Loading SPCE WAVE...</p>
+    </div>
+
+    <main>
+        <!-- Crowdfunding Section -->
+        <section id="crowdfunding" class="section">
+            <h1 style="margin-top: 100px;">Sponsorship</h1>
+            <p class="large-p">
+                If you would like to sponsor us, please check the details provided in the <a href="/sponsors.html" style="color: var(--accent-color); text-decoration: underline;">Sponsors</a> page.
+            </p>
+            <h1 style="margin-top: 100px;">Crowdfunding</h1>
+            <p class="large-p">
+                We design the best possible aircraft which can withstand various circumstances as per its requirement.
+                However, to achieve the best results, we require advanced equipment in our aircraft.
+            </p>
+            <p class="large-p">
+                A major setback for us is the electric propulsion which consists of brushless DC motors and servos
+                that exhaust a major portion of our funds. An advanced propulsion system would provide a boost for us 
+                to achieve the best results even in tough conditions, making our aircraft more capable.
+            </p>
+            <img src="money.png" alt="Funding Breakdown" style="width:100%; max-width:600px; display:block; margin: 30px auto;">
+            <p class="large-p">
+                Your generous contributions could be a helping hand for us to equip our aircraft with up-to-date 
+                electronics and, along with our reliable design, we can build a robust aircraft.
+            </p>
+
+            <h2>Aim & Vision</h2>
+            <p class="large-p">
+                Our mission is to achieve an AIR 1 in SAE DDC 2025. But this is not it - our vision is to go 
+                international and represent our country on a global level.
+            </p>            
+
+            <div class="donation-box">
+                <h2>Contribute</h2>
+                <p class="large-p">
+                If you would like to support us, you can contribute via UPI or direct bank transfer. Every contribution, big or small, brings us closer to our goal and is deeply appreciated.
+                </p>
+                <img src="upi-qr.png" alt="UPI QR Code">
+                <p class="large-p">
+                To make payment via UPI from your phone, click <a href="upi://pay?pa=spcewave@icici&pn=SPCE WAVE" style="color: var(--accent-color); text-decoration: underline;">here</a>.
+                </p>
+                <div class="account-details">
+                    <p><strong>Vice Capt. Riya Shah</strong></p>
+                    <p>Account No.: SB/916993595</p>
+                    <p>IFSC Code: IDIB000B050</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+<script>
+    // Loader
+    window.addEventListener('load', () => {
+        const loader = document.getElementById('loader');
+        if (loader) {
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 500);
+        }
+    });
+</script>
+</body>
+</html>
