@@ -3,336 +3,716 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPCE WAVE - Our Legacy</title>
+    <title>SPCE WAVE</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* =========================
+   GLOBAL RESET & VARIABLES
+   ========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        :root {
-            --text-color: #e0e0e0;
-            --bg-color: #010108;
-            --accent-color: #3a86ff;
-        }
+:root {
+    --text-color: #e0e0e0;
+    --bg-color: #010108;
+    --accent-color: #3a86ff;
+}
 
-        body {
-            background: radial-gradient(circle at top left, rgba(58,134,255,0.15), transparent 70%),
-                        radial-gradient(circle at bottom right, rgba(0,255,200,0.1), transparent 70%),
-                        var(--bg-color);
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: cover;
-            font-family: 'Inter', sans-serif;
-            color: var(--text-color);
-            overflow-x: hidden;
-            margin: 0;
-        }
+/* =========================
+   BODY & GLOBAL STYLES
+   ========================= */
+body {
+    background: radial-gradient(circle at top left, rgba(58,134,255,0.15), transparent 70%),
+                radial-gradient(circle at bottom right, rgba(0,255,200,0.1), transparent 70%),
+                var(--bg-color);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-color);
+    overflow-x: hidden;
+    margin: 0;
+}
 
-        main {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-        }
+/* =========================
+   3D CANVAS & MAIN LAYOUT
+   ========================= */
+#webgl-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    outline: none;
+    z-index: 1;
+}
 
-        .section {
-            min-height: 100vh;
-            width: 100%;
-            padding: 100px 10%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+main {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+}
 
-        .ui-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-            pointer-events: none;
-            backdrop-filter: blur(10px);
-        }
+.section {
+    min-height: 100vh;
+    width: 100%;
+    padding: 100px 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
-        .ui-overlay a {
-            color: var(--text-color);
-            text-decoration: none;
-            font-size: 18px;
-            font-weight: 400;
-            pointer-events: all;
-            padding: 8px 12px;
-            transition: color 0.3s ease;
-        }
+/* =========================
+   UI OVERLAY (HEADER / NAV)
+   ========================= */
+.ui-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    pointer-events: none;
+    backdrop-filter: blur(10px);
+}
 
-        .ui-overlay a:hover {
-            color: var(--accent-color);
-        }
+.ui-overlay a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 400;
+    pointer-events: all;
+    padding: 8px 12px;
+    transition: color 0.3s ease;
+}
 
-        .ui-overlay a.button {
-            border: 1px solid var(--text-color);
-            border-radius: 20px;
-            transition: background 0.3s ease;
-        }
+.ui-overlay a:hover {
+    color: var(--accent-color);
+}
 
-        .ui-overlay a.button:hover {
-            background: rgba(58, 134, 255, 0.2);
-        }
+.ui-overlay a.button {
+    border: 1px solid var(--text-color);
+    border-radius: 20px;
+    transition: background 0.3s ease;
+}
 
-        .nav-menu {
-            display: flex;
-            gap: 15px;
-        }
+.ui-overlay a.button:hover {
+    background: rgba(58, 134, 255, 0.2);
+}
 
-        .logo-img {
-            width: 80px;
-        }
+/* =========================
+   HAMBURGER MENU
+   ========================= */
+.hamburger {
+    display: none;
+    font-size: 24px;
+    color: var(--text-color);
+    cursor: pointer;
+    pointer-events: all;
+    padding: 8px 12px;
+    transition: color 0.3s ease;
+}
 
-        h1 {
-            font-size: clamp(4rem, 10vw, 5rem);
-            font-weight: 700;
-            text-transform: uppercase;
-            text-align: center;
-        }
+.hamburger:hover {
+    color: var(--accent-color);
+}
 
-        h2 {
-            font-size: 3rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            position: relative;
-        }
+.vbp-header-menu-button__svg {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transform: scaleX(-1);
+    display: none;
+}
 
-        .large-p {
-            font-size: clamp(1rem, 2.5vw, 1.5rem);
-            line-height: 1.6;
-            text-align: center;
-            margin: 20px auto;
-        }
+.vbp-header-menu-button__svg line {
+    stroke: var(--text-color);
+    stroke-width: 3px;
+    stroke-dasharray: 100%;
+    stroke-dashoffset: 0%;
+    transition: transform 0.3s, stroke-dashoffset .4s;
+    transform-origin: center;
+}
 
-        .achievement {
-            margin-bottom: 80px;
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-            padding: 20px;
-            border-radius: 10px;
-            border: #ccc 1px solid;
-        }
+.vbp-header-menu-button__svg .top {
+    transform: translateY(-35%);
+}
+.vbp-header-menu-button__svg .middle {
+    transition: opacity .3s, transform .3s;
+}
+.vbp-header-menu-button__svg .bottom {
+    transform: translateY(33%);
+    stroke-dashoffset: 9px;
+}
+.vbp-header-menu-button__svg:hover .bottom {
+    stroke-dashoffset: 0%;
+}
 
-        .achievement-content {
-            max-height: 1000px;
-            overflow: hidden;
-            transition: max-height 0.5s ease;
-        }
+/* Cross mode for hamburger */
+body.menu-open .vbp-header-menu-button__svg .top {
+    transform: rotate(45deg);
+    stroke-linecap: round;
+}
+body.menu-open .vbp-header-menu-button__svg .middle {
+    transform: scaleX(0.1);
+    opacity: 0;
+}
+body.menu-open .vbp-header-menu-button__svg .bottom {
+    transform: rotate(-45deg);
+    stroke-linecap: round;
+    stroke-dashoffset: 0%;
+}
 
-        .achievement.collapsed .achievement-content {
-            max-height: 0;
-        }
+/* =========================
+   NAVIGATION MENU
+   ========================= */
+.nav-menu {
+    display: flex;
+    gap: 15px;
+}
 
-        .toggle-arrow {
-            position: absolute;
-            right: 0;
-            font-size: 1.5rem;
-            color: var(--accent-color);
-            transition: transform 0.3s ease;
-        }
+/* =========================
+   TYPOGRAPHY
+   ========================= */
+h1 {
+    font-size: clamp(4rem, 10vw, 5rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+}
 
-        .achievement.collapsed .toggle-arrow {
-            transform: rotate(180deg);
-        }
+h2 {
+    font-size: 3rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
 
-        .achievements-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 20px;
-            margin: 20px auto 0;
-            max-width: 1200px;
-        }
+.large-p {
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    line-height: 1.6;
+    text-align: center;
+    margin: 20px auto;
+}
 
-        .rank-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 200px;
-        }
+/* =========================
+   ACHIEVEMENTS SECTION
+   ========================= */
+.achievement {
+    margin-bottom: 80px;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    padding: 20px;
+    border-radius: 10px;
+    border: #ccc 1px solid;
+}
+.achievement.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
 
-        .rank-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+.achievement-content {
+    max-height: 1000px;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+}
+.achievement.collapsed .achievement-content {
+    max-height: 0;
+}
 
-        .Air {
-            color: var(--accent-color);
-            font-size: clamp(2rem, 5vw, 3rem);
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
+.toggle-arrow {
+    position: absolute;
+    right: 0;
+    font-size: 1.5rem;
+    color: var(--accent-color);
+    transition: transform 0.3s ease;
+}
+.achievement.collapsed .toggle-arrow {
+    transform: rotate(180deg);
+}
 
-        .Rank {
-            color: var(--accent-color);
-            font-size: 10rem;
-            font-weight: 900;
-            line-height: 1;
-        }
+.achievements-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin: 20px auto 0;
+    max-width: 1200px;
+}
 
-        .rank-contents {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            align-items: flex-start;
-        }
+.rank-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.Air {
+    color: var(--accent-color);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+.Rank {
+    color: var(--accent-color);
+    font-size: 10rem;
+    font-weight: 900;
+    line-height: 1;
+}
 
-        .rank-contents-item {
-            margin-bottom: 20px;
-        }
+.rank-contents {
+    flex: 1;
+    height: 100%;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+.rank-contents p {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 500;
+    color: #ccc;
+    text-transform: uppercase;
+}
 
-        .rank-contents p {
-            font-size: clamp(1.5rem, 4vw, 2rem);
-            font-weight: 500;
-            color: #ccc;
-            text-transform: uppercase;
-        }
+.image-container {
+    flex: 1;
+    max-width: 50%;
+    height: 400px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
 
-        .image-container {
-            flex: 1;
-            max-width: 50%;
-            height: 400px;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        }
+/* =========================
+   SLIDESHOW
+   ========================= */
+.slideshow-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+}
+.slide.active {
+    opacity: 1;
+}
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-        .slideshow-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
+.slideshow-nav {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+.nav-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.nav-dot.active {
+    background: var(--accent-color);
+    box-shadow: 0 0 10px rgba(58, 134, 255, 0.5);
+    transform: scale(1.2);
+}
 
-        .slide {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 0.8s ease-in-out;
-        }
+.slideshow-arrows {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: var(--text-color);
+    font-size: 24px;
+    padding: 15px;
+    cursor: pointer;
+    border-radius: 50%;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+}
+.image-container:hover .slideshow-arrows,
+.image-container:focus-within .slideshow-arrows {
+    opacity: 1;
+}
+.slideshow-arrows:hover {
+    background: rgba(58, 134, 255, 0.3);
+    transform: translateY(-50%) scale(1.1);
+}
+.prev-arrow { left: 15px; }
+.next-arrow { right: 15px; }
 
-        .slide.active {
-            opacity: 1;
-        }
+/* =========================
+   LOADER
+   ========================= */
+#loader {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-color);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease;
+}
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: var(--text-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+#loader p {
+    margin-top: 20px;
+    color: #aaa;
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+.logo-img {
+    width: 80px;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
 
-        .slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
 
-        @media (max-width: 768px) {
-            .section {
-                padding: 80px 5%;
-            }
-            
-            .achievements-container {
-                flex-direction: column;
-                gap: 30px;
-                align-items: center;
-            }
-            
-            .rank-container {
-                flex-direction: column;
-                gap: 20px;
-                min-width: auto;
-            }
-            
-            .Rank {
-                font-size: 4rem;
-            }
-            
-            .Air {
-                font-size: 1.5rem;
-            }
-            
-            .rank-contents {
-                align-items: center;
-                text-align: center;
-            }
-            
-            .rank-contents p {
-                font-size: 1.2rem;
-            }
-            
-            .image-container {
-                max-width: 100%;
-                height: 300px;
-            }
-            
-            .hero-section h1 {
-                font-size: 2.5rem;
-                margin-top: 100px;
-            }
-            
-            .logo-img {
-                width: 50px;
-            }
-        }
+/* FOOTER */
+    .footer {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #000000 100%);
+        backdrop-filter: blur(10px);
+        color: white;
+        padding: 50px 0;
+        position: relative;
+        z-index: 10;
+    }
+
+    .footer-content {
+        position: relative;
+        z-index: 2;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .footer-top {
+        display: grid;
+        grid-template-columns: 1fr 1fr 2fr;
+        gap: 40px;
+        margin-bottom: 30px;
+    }
+
+    .footer-section h3 {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+        color: #fff;
+        position: relative;
+    }
+
+    .footer-section h3::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background: #00c8ff;
+        border-radius: 2px;
+    }
+
+    .footer-section p,
+    .footer-section li {
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 8px;
+    }
+
+    .footer-section ul {
+        list-style: none;
+    }
+
+    .footer-section ul li {
+        margin-bottom: 10px;
+    }
+
+    .footer-section ul li a {
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .footer-section ul li a:hover {
+        color: #00c8ff;
+        transform: translateX(5px);
+    }
+
+    .contact-info {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 18px;
+        padding: 8px 0;
+    }
+
+    .contact-info i {
+        margin-right: 15px;
+        width: 24px;
+        font-size: 1.2rem;
+        color: #00c8ff;
+        margin-top: 2px;
+    }
+
+    .contact-info span {
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .social-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .social-link:hover {
+        background: #00c8ff;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+    }
+
+    .social-link i {
+        font-size: 1.2rem;
+    }
+
+    .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        padding-top: 25px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .footer-bottom-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        /* flex-wrap: wrap; */
+        gap: 20px;
+    }
+
+    .footer-links {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .footer-links a {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+        color: #00c8ff;
+    }
+
+    .footer .contact-info {
+    display: flex;
+    gap: 15px;
+    flex-direction: row;
+    align-items: center;
+    }
+
+    .footer .social-links {
+    display: flex;
+    gap: 15px;
+    flex-direction: row;
+    align-items: center;
+    }
+
+/* =========================
+   RESPONSIVE DESIGN
+   ========================= */
+@media (max-width: 768px) {
+    .hamburger,
+    .vbp-header-menu-button__svg {
+        display: block;
+    }
+
+    .ui-overlay {
+        padding: 15px 20px;
+        position: relative;
+    }
+
+    .ui-overlay .button {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        order: 2;
+    }
+
+    .logo-img {
+        width: 50px;
+    }
+
+    .nav-menu {
+        position: absolute;
+        top: 70px;
+        right: 20px;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        background: rgba(10, 10, 20, 0.9);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        min-width: 180px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+        pointer-events: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 999;
+    }
+    
+    .nav-menu.active {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: auto;
+    }
+    
+    .nav-menu a {
+        width: 100%;
+        text-align: center;
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 8px 12px;
+        border-radius: 8px;
+        transition: background 0.2s ease;
+    }
+    
+    .nav-menu a:hover {
+        background: rgba(58, 134, 255, 0.1);
+    }
+
+    .section {
+        padding: 80px 5%;
+    }
+    .achievements-container {
+        flex-direction: column;
+        gap: 30px;
+    }
+    .Rank {
+        font-size: 5rem;
+    }
+    .rank-contents {
+        align-items: center;
+        text-align: center;
+    }
+    .rank-contents p {
+        font-size: 1.5rem;
+    }
+    .image-container {
+        max-width: 100%;
+        height: 300px;
+    }
+    .hero-section h1 {
+        font-size: 2.5rem;
+        margin-top: 100px;
+    }
+}
     </style>
 </head>
 <body>
+    <canvas id="webgl-canvas"></canvas>
     <div class="ui-overlay">
-        <a href="/index.html" class="top-link"><img src="logo.png" class="logo-img" alt="SPCE WAVE Logo"></a>
+        <a href="/index.html" class="top-link"><img src="logo.png" class = "logo-img"alt="SPCE WAVE Logo"></a>
+        <div class="hamburger">
+            <svg class="vbp-header-menu-button__svg" id="hamburger" role="button" aria-label="Toggle navigation menu">
+                <line x1="0" y1="50%" x2="100%" y2="50%" class="top" shape-rendering="crispEdges" />
+                <line x1="0" y1="50%" x2="100%" y2="50%" class="middle" shape-rendering="crispEdges" />
+                <line x1="0" y1="50%" x2="100%" y2="50%" class="bottom" shape-rendering="crispEdges" />
+            </svg>
+        </div>
         <div class="nav-menu">
-            <a href="/index.html" class="top-link">Home</a> 
-            <a href="/legacy.html" class="top-link">Our Legacy</a>
-            <a href="/team.html" class="top-link">Team</a>
-            <a href="/gallery.html" class="top-link">Gallery</a>
-            <a href="/sponsors.html" class="top-link">Sponsors</a>
-            <a href="/index.html#contact" class="top-link">Contact Us</a>
+        <a href="/index.html" class="top-link">Home</a> 
+        <a href="/legacy.html" class="top-link">Our Legacy</a>
+        <a href="/team.html" class="top-link">Team</a>
+        <a href="/gallery.html" class="top-link">Gallery</a>
+        <a href="/sponsors.html" class="top-link">Sponsors</a>
+        <a href="/index.html#contact" class="top-link">Contact Us</a>
         </div>
         <a href="/support.html" class="top-link button">Support Us</a>
     </div>
-
+    <div id="loader">
+        <div class="spinner"></div>
+        <p>Loading SPCE WAVE...</p>
+    </div>
     <main>
         <section class="section hero-section">
             <h1 style="margin-top: 8rem; margin-bottom: 8rem;">Our Legacy</h1>
-            
-            <div class="achievement">
-                <h2>VAYU <span class="toggle-arrow">▼</span></h2>
+            <div class="achievement"> <!-- VAYU -->
+                <h2>VAYU<span class="toggle-arrow"><img src="arrow2.png" alt="Toggle achievement details" style="width: 20px;"></span></h2>
                 <div class="achievement-content">
                     <div class="achievements-container">
                         <div class="rank-container">
-                            <div class="rank-contents-item">
-                                <div class="rank-group">
-                                    <p class="Air">AIR</p>
-                                    <h1 class="Rank">1</h1>
-                                </div>
-                                <p>Overall Performance</p>
-                            </div>
-                            <div class="rank-contents-item">
-                                <div class="rank-group">
-                                    <p class="Air">AIR</p>
-                                    <h1 class="Rank">1</h1>
-                                </div>
-                                <p>Best Design Report</p>
-                            </div>
+                            <p class="Air">AIR</p>
+                            <h1 class="Rank">1</h1>
+                        </div>
+                        <div class="rank-contents">
+                            <p>Overall Performance</p>
+                            <p>Design Report</p>
                         </div>
                         <div class="image-container">
-                            <div class="slideshow-container">
+                            <div class="slideshow-container" data-slideshow-id="1" role="region" aria-label="Achievement slideshow">
                                 <div class="slide active">
                                     <img src="max.jpeg" alt="SAE Achievement 1">
+                                </div>
+                                <div class="slide">
+                                    <img src="max_2.jpg" alt="SAE Achievement 2">
+                                </div>
+                                <button class="slideshow-arrows prev-arrow" aria-label="Previous slide">❮</button>
+                                <button class="slideshow-arrows next-arrow" aria-label="Next slide">❯</button>
+                                <div class="slideshow-nav">
+                                    <div class="nav-dot active" data-slide="1" role="button" aria-label="Go to slide 1"></div>
+                                    <div class="nav-dot" data-slide="2" role="button" aria-label="Go to slide 2"></div>
                                 </div>
                             </div>
                         </div>
@@ -340,26 +720,30 @@
                     <p class="large-p">SAE DDC 2024</p>
                 </div>
             </div>
-
-            <div class="achievement">
-                <h2>KSHITIJ <span class="toggle-arrow">▼</span></h2>
+            <div class="achievement"> 
+                <h2>KSHITIJ<span class="toggle-arrow"><img src="arrow2.png" alt="Toggle achievement details" style="width: 20px;"></span></h2>
                 <div class="achievement-content">
                     <div class="achievements-container">
                         <div class="rank-container">
-                            <div class="rank-group">
-                                <p class="Air">TBD</p>
-                                <h1 class="Rank">-</h1>
-                            </div>
+                            <p class="Air">TBD</p>
+                            <h1 class="Rank">-</h1>
                         </div>
                         <div class="rank-contents">
-                            <div class="rank-contents-item">
-                                <p>Position: TBD</p>
-                            </div>
+                            <p>Results N/A</p>
                         </div>
                         <div class="image-container">
-                            <div class="slideshow-container">
+                            <div class="slideshow-container" data-slideshow-id="2" role="region" aria-label="Achievement slideshow">
                                 <div class="slide active">
                                     <img src="max.jpeg" alt="SAE Achievement 1">
+                                </div>
+                                <div class="slide">
+                                    <img src="max_2.jpg" alt="SAE Achievement 2">
+                                </div>
+                                <button class="slideshow-arrows prev-arrow" aria-label="Previous slide">❮</button>
+                                <button class="slideshow-arrows next-arrow" aria-label="Next slide">❯</button>
+                                <div class="slideshow-nav">
+                                    <div class="nav-dot active" data-slide="1" role="button" aria-label="Go to slide 1"></div>
+                                    <div class="nav-dot" data-slide="2" role="button" aria-label="Go to slide 2"></div>
                                 </div>
                             </div>
                         </div>
@@ -367,26 +751,30 @@
                     <p class="large-p">SAE DDC 2025</p>
                 </div>
             </div>
-
             <div class="achievement">
-                <h2>BOEING COMPETITION PLANE <span class="toggle-arrow">▼</span></h2>
+                <h2>Boeing Competition Plane<span class="toggle-arrow"><img src="arrow2.png" alt="Toggle achievement details" style="width: 20px;"></span></h2>
                 <div class="achievement-content">
                     <div class="achievements-container">
                         <div class="rank-container">
-                            <div class="rank-group">
-                                <p class="Air">TBD</p>
-                                <h1 class="Rank">-</h1>
-                            </div>
+                            <p class="Air">TBD</p>
+                            <h1 class="Rank">-</h1>
                         </div>
                         <div class="rank-contents">
-                            <div class="rank-contents-item">
-                                <p>Position: TBD</p>
-                            </div>
+                            <p>Results N/A </p>
                         </div>
                         <div class="image-container">
-                            <div class="slideshow-container">
+                            <div class="slideshow-container" data-slideshow-id="2" role="region" aria-label="Achievement slideshow">
                                 <div class="slide active">
                                     <img src="max.jpeg" alt="SAE Achievement 1">
+                                </div>
+                                <div class="slide">
+                                    <img src="max_2.jpg" alt="SAE Achievement 2">
+                                </div>
+                                <button class="slideshow-arrows prev-arrow" aria-label="Previous slide">❮</button>
+                                <button class="slideshow-arrows next-arrow" aria-label="Next slide">❯</button>
+                                <div class="slideshow-nav">
+                                    <div class="nav-dot active" data-slide="1" role="button" aria-label="Go to slide 1"></div>
+                                    <div class="nav-dot" data-slide="2" role="button" aria-label="Go to slide 2"></div>
                                 </div>
                             </div>
                         </div>
@@ -394,33 +782,35 @@
                     <p class="large-p">Boeing National Aeromodelling Competition 2024</p>
                 </div>
             </div>
-
             <div class="achievement">
-                <h2>MAESTERO/SPARTANS <span class="toggle-arrow">▼</span></h2>
+                <h2>MAESTERO / SPARTANS<span class="toggle-arrow"><img src="arrow2.png" alt="Toggle achievement details" style="width: 20px;"></span></h2>
                 <div class="achievement-content">
                     <div class="achievements-container">
                         <div class="rank-container">
-                            <div class="rank-group">
-                                <p class="Air">AIR</p>
-                                <h1 class="Rank">4</h1>
-                            </div>
-                            <div class="rank-group">
-                                <p class="Air">AIR</p>
-                                <h1 class="Rank">2</h1>
-                            </div>
+                            <p class="Air">AIR</p>
+                            <h1 class="Rank">2</h1>
+                            <p class="Air">AIR</p>
+                            <h1 class="Rank">4</h1>
                         </div>
                         <div class="rank-contents">
-                            <div class="rank-contents-item">
-                                <p>Overall Performance</p>
-                            </div>
-                            <div class="rank-contents-item">
-                                <p>Best Technical Presentation</p>
-                            </div>
+                            <p style="height: 0.5rem;"><br></p>
+                            <p>Technical Presentation</p>
+                            <p><br><br><br></p>
+                            <p>Overall Performance</p>
                         </div>
                         <div class="image-container">
-                            <div class="slideshow-container">
+                            <div class="slideshow-container" data-slideshow-id="3" role="region" aria-label="Achievement slideshow">
                                 <div class="slide active">
                                     <img src="max.jpeg" alt="SAE Achievement 1">
+                                </div>
+                                <div class="slide">
+                                    <img src="max_2.jpg" alt="SAE Achievement 2">
+                                </div>
+                                <button class="slideshow-arrows prev-arrow" aria-label="Previous slide">❮</button>
+                                <button class="slideshow-arrows next-arrow" aria-label="Next slide">❯</button>
+                                <div class="slideshow-nav">
+                                    <div class="nav-dot active" data-slide="1" role="button" aria-label="Go to slide 1"></div>
+                                    <div class="nav-dot" data-slide="2" role="button" aria-label="Go to slide 2"></div>
                                 </div>
                             </div>
                         </div>
@@ -428,33 +818,35 @@
                     <p class="large-p">SAE DDC 2023</p>
                 </div>
             </div>
-            
             <div class="achievement">
-                <h2>MRIYA/ALBETROS <span class="toggle-arrow">▼</span></h2>
+                <h2>MRIYA / ALBETROS<span class="toggle-arrow"><img src="arrow2.png" alt="Toggle achievement details" style="width: 20px;"></span></h2>
                 <div class="achievement-content">
                     <div class="achievements-container">
                         <div class="rank-container">
-                            <div class="rank-group">
-                                <p class="Air">AIR</p>
-                                <h1 class="Rank">3</h1>
-                            </div>
-                            <div class="rank-group">
-                                <p class="Air">AIR</p>
-                                <h1 class="Rank">2</h1>
-                            </div>
+                            <p class="Air">AIR</p>
+                            <h1 class="Rank">2</h1>
+                            <p class="Air">AIR</p>
+                            <h1 class="Rank">3</h1>
                         </div>
                         <div class="rank-contents">
-                            <div class="rank-contents-item">
-                                <p>Overall Performance</p>
-                            </div>
-                            <div class="rank-contents-item">
-                                <p>Technical Presentation</p>
-                            </div>
+                            <p style="height: 0.5rem;"><br></p>
+                            <p>Technical Presentation</p>
+                            <p><br><br><br></p>
+                            <p>Overall Performance</p>
                         </div>
                         <div class="image-container">
-                            <div class="slideshow-container">
+                            <div class="slideshow-container" data-slideshow-id="3" role="region" aria-label="Achievement slideshow">
                                 <div class="slide active">
                                     <img src="max.jpeg" alt="SAE Achievement 1">
+                                </div>
+                                <div class="slide">
+                                    <img src="max_2.jpg" alt="SAE Achievement 2">
+                                </div>
+                                <button class="slideshow-arrows prev-arrow" aria-label="Previous slide">❮</button>
+                                <button class="slideshow-arrows next-arrow" aria-label="Next slide">❯</button>
+                                <div class="slideshow-nav">
+                                    <div class="nav-dot active" data-slide="1" role="button" aria-label="Go to slide 1"></div>
+                                    <div class="nav-dot" data-slide="2" role="button" aria-label="Go to slide 2"></div>
                                 </div>
                             </div>
                         </div>
@@ -462,26 +854,30 @@
                     <p class="large-p">SAE DDC 2022</p>
                 </div>
             </div>
-
             <div class="achievement">
-                <h2>ZEUS <span class="toggle-arrow">▼</span></h2>
+                <h2>ZEUS<span class="toggle-arrow"><img src="arrow2.png" alt="Toggle achievement details" style="width: 20px;"></span></h2>
                 <div class="achievement-content">
                     <div class="achievements-container">
                         <div class="rank-container">
-                            <div class="rank-group">
-                                <p class="Air">AIR</p>
-                                <h1 class="Rank">2</h1>
-                            </div>
+                            <p class="Air">AIR</p>
+                            <h1 class="Rank">2</h1>
                         </div>
                         <div class="rank-contents">
-                            <div class="rank-contents-item">
-                                <p>Overall Performance</p>
-                            </div>
+                            <p>Overall Performance</p>
                         </div>
                         <div class="image-container">
-                            <div class="slideshow-container">
+                            <div class="slideshow-container" data-slideshow-id="3" role="region" aria-label="Achievement slideshow">
                                 <div class="slide active">
                                     <img src="max.jpeg" alt="SAE Achievement 1">
+                                </div>
+                                <div class="slide">
+                                    <img src="max_2.jpg" alt="SAE Achievement 2">
+                                </div>
+                                <button class="slideshow-arrows prev-arrow" aria-label="Previous slide">❮</button>
+                                <button class="slideshow-arrows next-arrow" aria-label="Next slide">❯</button>
+                                <div class="slideshow-nav">
+                                    <div class="nav-dot active" data-slide="1" role="button" aria-label="Go to slide 1"></div>
+                                    <div class="nav-dot" data-slide="2" role="button" aria-label="Go to slide 2"></div>
                                 </div>
                             </div>
                         </div>
@@ -489,26 +885,30 @@
                     <p class="large-p">IIT Bombay Techfest Aerovaccine 2020</p>
                 </div>
             </div>
-
             <div class="achievement">
-                <h2>VISION <span class="toggle-arrow">▼</span></h2>
+                <h2>VISION<span class="toggle-arrow"><img src="arrow2.png" alt="Toggle achievement details" style="width: 20px;"></span></h2>
                 <div class="achievement-content">
                     <div class="achievements-container">
                         <div class="rank-container">
-                            <div class="rank-group">
-                                <p class="Air">AIR</p>
-                                <h1 class="Rank">8</h1>
-                            </div>
+                            <p class="Air">AIR</p>
+                            <h1 class="Rank">8</h1>
                         </div>
                         <div class="rank-contents">
-                            <div class="rank-contents-item">
-                                <p>Overall Performance</p>
-                            </div>
+                            <p>Overall Performance</p>
                         </div>
                         <div class="image-container">
-                            <div class="slideshow-container">
+                            <div class="slideshow-container" data-slideshow-id="3" role="region" aria-label="Achievement slideshow">
                                 <div class="slide active">
                                     <img src="max.jpeg" alt="SAE Achievement 1">
+                                </div>
+                                <div class="slide">
+                                    <img src="max_2.jpg" alt="SAE Achievement 2">
+                                </div>
+                                <button class="slideshow-arrows prev-arrow" aria-label="Previous slide">❮</button>
+                                <button class="slideshow-arrows next-arrow" aria-label="Next slide">❯</button>
+                                <div class="slideshow-nav">
+                                    <div class="nav-dot active" data-slide="1" role="button" aria-label="Go to slide 1"></div>
+                                    <div class="nav-dot" data-slide="2" role="button" aria-label="Go to slide 2"></div>
                                 </div>
                             </div>
                         </div>
@@ -516,26 +916,30 @@
                     <p class="large-p">SAE INDIA Aero Design Challenge 2020</p>
                 </div>
             </div>
-
             <div class="achievement">
-                <h2>SAE PLANE 2019 <span class="toggle-arrow">▼</span></h2>
+                <h2>SAE PLANE 2019<span class="toggle-arrow"><img src="arrow2.png" alt="Toggle achievement details" style="width: 20px;"></span></h2>
                 <div class="achievement-content">
                     <div class="achievements-container">
                         <div class="rank-container">
-                            <div class="rank-group">
-                                <p class="Air">AIR</p>
-                                <h1 class="Rank">11</h1>
-                            </div>
+                            <p class="Air">AIR</p>
+                            <h1 class="Rank">11</h1>
                         </div>
                         <div class="rank-contents">
-                            <div class="rank-contents-item">
-                                <p>Overall Performance</p>
-                            </div>
+                            <p>Overall Performance</p>
                         </div>
                         <div class="image-container">
-                            <div class="slideshow-container">
+                            <div class="slideshow-container" data-slideshow-id="3" role="region" aria-label="Achievement slideshow">
                                 <div class="slide active">
                                     <img src="max.jpeg" alt="SAE Achievement 1">
+                                </div>
+                                <div class="slide">
+                                    <img src="max_2.jpg" alt="SAE Achievement 2">
+                                </div>
+                                <button class="slideshow-arrows prev-arrow" aria-label="Previous slide">❮</button>
+                                <button class="slideshow-arrows next-arrow" aria-label="Next slide">❯</button>
+                                <div class="slideshow-nav">
+                                    <div class="nav-dot active" data-slide="1" role="button" aria-label="Go to slide 1"></div>
+                                    <div class="nav-dot" data-slide="2" role="button" aria-label="Go to slide 2"></div>
                                 </div>
                             </div>
                         </div>
@@ -543,26 +947,30 @@
                     <p class="large-p">SAE INDIA Aero Design Challenge 2019</p>
                 </div>
             </div>
-
             <div class="achievement">
-                <h2>SAE PLANE 2018 <span class="toggle-arrow">▼</span></h2>
+                <h2>SAE Plane 2018<span class="toggle-arrow"><img src="arrow2.png" alt="Toggle achievement details" style="width: 20px;"></span></h2>
                 <div class="achievement-content">
                     <div class="achievements-container">
                         <div class="rank-container">
-                            <div class="rank-group">
-                                <p class="Air">AIR</p>
-                                <h1 class="Rank">12</h1>
-                            </div>
+                            <p class="Air">AIR</p>
+                            <h1 class="Rank">12</h1>
                         </div>
                         <div class="rank-contents">
-                            <div class="rank-contents-item">
-                                <p>Overall Performance</p>
-                            </div>
+                            <p>Overall Performance</p>
                         </div>
                         <div class="image-container">
-                            <div class="slideshow-container">
+                            <div class="slideshow-container" data-slideshow-id="3" role="region" aria-label="Achievement slideshow">
                                 <div class="slide active">
                                     <img src="max.jpeg" alt="SAE Achievement 1">
+                                </div>
+                                <div class="slide">
+                                    <img src="max_2.jpg" alt="SAE Achievement 2">
+                                </div>
+                                <button class="slideshow-arrows prev-arrow" aria-label="Previous slide">❮</button>
+                                <button class="slideshow-arrows next-arrow" aria-label="Next slide">❯</button>
+                                <div class="slideshow-nav">
+                                    <div class="nav-dot active" data-slide="1" role="button" aria-label="Go to slide 1"></div>
+                                    <div class="nav-dot" data-slide="2" role="button" aria-label="Go to slide 2"></div>
                                 </div>
                             </div>
                         </div>
@@ -573,8 +981,189 @@
         </section>
     </main>
 
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-top">
+                <!-- Follow Us -->
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <p>Stay connected with us on social media for updates, events, and exciting club activities!</p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/spcew.a.v.e/" class="social-link" aria-label="Instagram">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="https://in.linkedin.com/company/spce-w-a-v-e" class="social-link" aria-label="LinkedIn">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://www.facebook.com/SPCEWAVE/" class="social-link" aria-label="Facebook">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@spcewave6765" class="social-link" aria-label="YouTube">
+                            <i class="fa-brands fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#team">Team</a></li>
+                        <li><a href="#gallery">Gallery</a></li>
+                        <li><a href="#sponsors">Sponsors</a></li>
+                        <li><a href="#support">Support Us</a></li>
+                        <li><a href="#legacy">Our Legacy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <div class="contact-info">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span>spcewave@spce.in</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fa-solid fa-phone"></i>
+                        <span>+91 99206 35938   </span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>Sardar Patel College of Engineering<br>Bhavan's Campus <br>Andheri (W), Mumbai - 400058</span>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <div>
+                        <p style="text-align: center;">&copy; 2025 SPCE WAVE. All rights reserved.<br></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <script>
-        // Simple toggle functionality for achievements
+        // Loader
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+            }
+        });
+
+        // Hamburger Menu Toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+
+        hamburger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.body.classList.toggle('menu-open');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking a nav link on mobile
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    document.body.classList.remove('menu-open');
+                    navMenu.classList.remove('active');
+                }
+            });
+        });
+
+        // Close menu when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 && 
+                !navMenu.contains(e.target) && 
+                !hamburger.contains(e.target) &&
+                navMenu.classList.contains('active')) {
+                document.body.classList.remove('menu-open');
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                document.body.classList.remove('menu-open');
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Slideshow functionality
+        document.querySelectorAll('.slideshow-container').forEach((container) => {
+            const slides = container.querySelectorAll('.slide');
+            const dots = container.querySelectorAll('.nav-dot');
+            let currentIndex = 0;
+            const total = slides.length;
+
+            function showSlide(index) {
+                slides.forEach(slide => slide.classList.remove('active'));
+                dots.forEach(dot => dot.classList.remove('active'));
+                slides[index].classList.add('active');
+                dots[index].classList.add('active');
+            }
+
+            function changeSlide(dir) {
+                currentIndex = (currentIndex + dir + total) % total;
+                showSlide(currentIndex);
+            }
+
+            function setSlide(index) {
+                currentIndex = index - 1;
+                showSlide(currentIndex);
+            }
+
+            const prevArrow = container.querySelector('.prev-arrow');
+            const nextArrow = container.querySelector('.next-arrow');
+
+            if (prevArrow) prevArrow.addEventListener('click', () => changeSlide(-1));
+            if (nextArrow) nextArrow.addEventListener('click', () => changeSlide(1));
+
+            dots.forEach(dot => {
+                dot.addEventListener('click', () => setSlide(parseInt(dot.dataset.slide)));
+            });
+
+            // Keyboard navigation for slideshow
+            container.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') changeSlide(-1);
+                if (e.key === 'ArrowRight') changeSlide(1);
+            });
+
+            // Auto-slide only when visible
+            let intervalId = setInterval(() => changeSlide(1), 5000);
+            const slideObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) {
+                        clearInterval(intervalId);
+                    } else {
+                        intervalId = setInterval(() => changeSlide(1), 5000);
+                    }
+                });
+            }, { threshold: 0.1 });
+            slideObserver.observe(container);
+        });
+
+        // Scroll animation for achievements
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.achievement').forEach(achievement => {
+            observer.observe(achievement);
+        });
+
+        // Toggle functionality for achievements
         document.querySelectorAll('.achievement h2').forEach(header => {
             header.addEventListener('click', () => {
                 const achievement = header.parentElement;

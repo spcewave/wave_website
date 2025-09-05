@@ -3,6 +3,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 	/* Global Reset */
 	* {
@@ -243,7 +244,6 @@
 	}
 
 	.member-role {
-		color: #848696;
 		font-size: 1.5rem;
 		font-weight: 500;
 		opacity: 0.8;
@@ -454,6 +454,343 @@
 		display: flex;
 		gap: 15px;
 	}
+
+	/* FOOTER */
+    .footer {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #000000 100%);
+        backdrop-filter: blur(10px);
+        color: white;
+        padding: 50px 0;
+        position: relative;
+        z-index: 10;
+    }
+
+    .footer-content {
+        position: relative;
+        z-index: 2;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .footer-top {
+        display: grid;
+        grid-template-columns: 1fr 1fr 2fr;
+        gap: 40px;
+        margin-bottom: 30px;
+    }
+
+    .footer-section h3 {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+        color: #fff;
+        position: relative;
+    }
+
+    .footer-section h3::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background: #00c8ff;
+        border-radius: 2px;
+    }
+
+    .footer-section p,
+    .footer-section li {
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 8px;
+    }
+
+    .footer-section ul {
+        list-style: none;
+    }
+
+    .footer-section ul li {
+        margin-bottom: 10px;
+    }
+
+    .footer-section ul li a {
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .footer-section ul li a:hover {
+        color: #00c8ff;
+        transform: translateX(5px);
+    }
+
+    .contact-info {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 18px;
+        padding: 8px 0;
+    }
+
+    .contact-info i {
+        margin-right: 15px;
+        width: 24px;
+        font-size: 1.2rem;
+        color: #00c8ff;
+        margin-top: 2px;
+    }
+
+    .contact-info span {
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .social-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .social-link:hover {
+        background: #00c8ff;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+    }
+
+    .social-link i {
+        font-size: 1.2rem;
+    }
+
+    .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        padding-top: 25px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .footer-bottom-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        /* flex-wrap: wrap; */
+        gap: 20px;
+    }
+
+    .footer-links {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .footer-links a {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+        color: #00c8ff;
+    }
+
+    .footer .contact-info {
+    display: flex;
+    gap: 15px;
+    flex-direction: row;
+    align-items: center;
+    }
+
+    .footer .social-links {
+    display: flex;
+    gap: 15px;
+    flex-direction: row;
+    align-items: center;
+    }
+
+	.faculty {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-evenly;
+		align-items: center;
+		height: 30vh;
+		margin: 100px;
+	}
+	.faculty-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	.faculty-container img{
+		height: 15rem;
+		width: 15rem;
+		border-radius: 50%;
+		margin: 10px 0 10px;
+	}
+
+	#wrapper {
+  display: block;
+  /* width: 900px; */
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px 25px;
+
+  /* Glass effect */
+  background: rgba(100, 100, 100, 0.2); /* Transparent white */
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+
+  margin-bottom: 30px;
+
+  /* Shadow for depth */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+#keywords {
+  margin: 0 auto;
+  font-size: 1.2em;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+
+#keywords thead {
+  /* cursor: pointer; */
+  /* background: #c9dff0; */
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+#keywords thead tr th { 
+  font-weight: bold;
+  /* width: 100%; */
+  padding: 12px 30px;
+  padding-left: 42px;
+}
+#keywords thead tr th span { 
+  padding-right: 20px;
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  width: 100%;
+}
+
+#keywords tbody tr { 
+  color: #555;
+  width: 100%;
+}
+
+#keywords thead {
+	width: 100%;
+	font-size: 1.75rem;
+	color: var(--accent-color);
+}
+
+#keywords tbody tr td {
+  text-align: center;
+  padding: 15px 10px;
+}
+
+#keywords th{
+	width: 400px;
+}
+
+
+.timeline-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centers timeline block */
+  margin: 50px auto;
+  max-width: 80%;
+}
+
+.timeline {
+  border-left: 5px solid var(--accent-color);
+  padding-left: 40px;
+}
+
+.timeline .entry {
+  margin: 30px 0;
+  position: relative;
+  font-size: 1.5rem;
+}
+
+.timeline .entry::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background: var(--accent-color);
+  border-radius: 50%;
+  position: absolute;
+  left: -52px;
+  top: 6px;
+}
+
+.timeline .year {
+  /* font-weight: bold; */
+  margin-right: 15px;
+  font-size: 1.5rem;
+  /* color: #444; */
+
+		color: #848696;
+}
+
+.timeline .captain {
+  /* color: #444; */
+  /* font-weight: 600; */
+  font-size: 1.8rem;
+}
+
+
+
+
+@media (max-width: 768px) {
+  #wrapper {
+    width: 95%;
+    padding: 15px;
+  }
+
+  #keywords {
+    font-size: 1rem;
+  }
+
+  #keywords thead tr th {
+    padding: 10px;
+    font-size: 1.2rem;
+  }
+
+  #keywords tbody tr td {
+    padding: 8px 5px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  #keywords {
+    font-size: 0.9rem;
+  }
+
+  #keywords thead tr th {
+    padding: 8px;
+    font-size: 1rem;
+  }
+
+  #keywords tbody tr td {
+    padding: 6px 4px;
+    font-size: 0.85rem;
+  }
+}
+
+
 
 	@media (max-width: 768px) {
 
@@ -679,7 +1016,179 @@
 		<div class="dot" data-index="11"></div>
 		<div class="dot" data-index="12"></div>
 	</div>
-	<br><br><br><br><br><br><br><br>
+	<section class="faculty">
+		<div class ="faculty-container">
+			<p class="member-role">Faculty Advisor</p>
+			<img src="kunal.png" alt="Maurya">
+			<h2 class="member-name">Prof. Kunal Bhavsar</h2>
+		</div>
+		<div class ="faculty-container">
+			<p class="member-role">Past Faculty Advisor</p>
+			<img src="maurya.png" alt="Maurya">
+			<h2 class="member-name">Dr. RS Maurya</h2>
+		</div>
+	</section>
+	<div id="wrapper">
+  <h1 style="margin: 10px 10px 20px; text-align: center;">PRESENT CLUB MEMBERS</h1>
+  
+  <table id="keywords" cellspacing="0" cellpadding="0">
+  <thead>
+    <tr>
+      <th><span>WINGS</span></th>
+      <th><span>EMPENNAGE</span></th>
+      <th><span>FUSELAGE</span></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="member-role" style="color:#fff">Ved</td>
+      <td class="member-role" style="color:#fff">Abhijit</td>
+      <td class="member-role" style="color:#fff">Siddharth</td>
+    </tr>
+    <tr>
+      <td class="member-role" style="color:#fff">Sahil</td>
+      <td class="member-role" style="color:#fff">Salman</td>
+      <td class="member-role" style="color:#fff">Vivaan</td>
+    </tr>
+    <tr>
+      <td class="member-role" style="color:#fff">Shreeya</td>
+      <td class="member-role" style="color:#fff">Tanisha</td>
+      <td class="member-role" style="color:#fff">Maurya</td>
+    </tr>
+    <tr>
+      <td class="member-role" style="color:#fff">Harsh</td>
+      <td class="member-role" style="color:#fff">Vrinda</td>
+      <td class="member-role" style="color:#fff">Harshvardhan</td>
+    </tr>
+    <tr>
+      <td class="member-role" style="color:#fff">Shlok</td>
+      <td class="member-role" style="color:#fff">Avaneesh</td>
+      <td class="member-role" style="color:#fff">Soham</td>
+    </tr>
+    <tr>
+      <td class="member-role" style="color:#fff">Sudarshan</td>
+      <td class="member-role" style="color:#fff">Sagarika</td>
+      <td class="member-role" style="color:#fff">Aryan</td>
+    </tr>
+    <tr>
+      <td class="member-role" style="color:#fff">Ronak</td>
+      <td class="member-role" style="color:#fff">Sumant</td>
+      <td class="member-role" style="color:#fff"></td>
+    </tr>
+    <tr>
+      <td class="member-role" style="color:#fff">Rajas</td>
+      <td class="member-role" style="color:#fff">Shubham</td>
+      <td class="member-role" style="color:#fff"></td>
+    </tr>
+    <tr>
+      <td class="member-role" style="color:#fff"></td>
+      <td class="member-role" style="color:#fff">Uday</td>
+      <td class="member-role" style="color:#fff"></td>
+    </tr>
+  </tbody>
+</table>
+ </div> 
+<div class="timeline-container">
+  <h1 style="margin: 10px 10px 20px; text-align: center;">PAST CLUB CAPTAINS</h1>
+  <div class="timeline">
+    <div class="entry">
+      <span class="year">2017–2018</span>
+      <span class="captain member-role">Raj Savla</span>
+    </div>
+    <div class="entry">
+      <span class="year">2018–2019</span>
+      <span class="captain member-role">Brian David</span>
+    </div>
+    <div class="entry">
+      <span class="year">2019–2021</span>
+      <span class="captain member-role">Nathan D’Souza</span>
+    </div>
+    <div class="entry">
+      <span class="year">2021–2022</span>
+      <span class="captain member-role">Prachi Sahu</span>
+    </div>
+	<div class="entry">
+      <span class="year">2021–2022</span>
+      <span class="captain member-role">Atharv Nene + Vaibhav Ramesh</span>
+    </div>
+    <div class="entry">
+      <span class="year">2023–2024</span>
+      <span class="captain member-role">Dylan Oliveira + Vishva Shah</span>
+    </div>
+    <div class="entry">
+      <span class="year">2023–2024</span>
+      <span class="captain member-role">Rishi Kushwaha + Ajay Ade</span>
+    </div>
+  </div>
+</div>
+
+
+
+	<footer class="footer">
+        <div class="footer-content">
+            <div class="footer-top">
+                <!-- Follow Us -->
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <p>Stay connected with us on social media for updates, events, and exciting club activities!</p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/spcew.a.v.e/" class="social-link" aria-label="Instagram">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="https://in.linkedin.com/company/spce-w-a-v-e" class="social-link" aria-label="LinkedIn">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://www.facebook.com/SPCEWAVE/" class="social-link" aria-label="Facebook">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@spcewave6765" class="social-link" aria-label="YouTube">
+                            <i class="fa-brands fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#team">Team</a></li>
+                        <li><a href="#gallery">Gallery</a></li>
+                        <li><a href="#sponsors">Sponsors</a></li>
+                        <li><a href="#support">Support Us</a></li>
+                        <li><a href="#legacy">Our Legacy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <div class="contact-info">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span>spcewave@spce.in</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fa-solid fa-phone"></i>
+                        <span>+91 99206 35938   </span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>Sardar Patel College of Engineering<br>Bhavan's Campus <br>Andheri (W), Mumbai - 400058</span>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <div>
+                        <p style="text-align: center;">&copy; 2025 SPCE WAVE. All rights reserved.<br></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 </body>
 <script>
 	const teamMembers = [

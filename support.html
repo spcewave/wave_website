@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         /* Global Reset & Variables */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -88,6 +89,167 @@
             line-height: 1.8;
             text-align: center;
         }
+
+        /* FOOTER */
+    .footer {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #000000 100%);
+        backdrop-filter: blur(10px);
+        color: white;
+        padding: 50px 0;
+        position: relative;
+        z-index: 10;
+    }
+
+    .footer-content {
+        position: relative;
+        z-index: 2;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .footer-top {
+        display: grid;
+        grid-template-columns: 1fr 1fr 2fr;
+        gap: 40px;
+        margin-bottom: 30px;
+    }
+
+    .footer-section h3 {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+        color: #fff;
+        position: relative;
+    }
+
+    .footer-section h3::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background: #00c8ff;
+        border-radius: 2px;
+    }
+
+    .footer-section p,
+    .footer-section li {
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 8px;
+    }
+
+    .footer-section ul {
+        list-style: none;
+    }
+
+    .footer-section ul li {
+        margin-bottom: 10px;
+    }
+
+    .footer-section ul li a {
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .footer-section ul li a:hover {
+        color: #00c8ff;
+        transform: translateX(5px);
+    }
+
+    .contact-info {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 18px;
+        padding: 8px 0;
+    }
+
+    .contact-info i {
+        margin-right: 15px;
+        width: 24px;
+        font-size: 1.2rem;
+        color: #00c8ff;
+        margin-top: 2px;
+    }
+
+    .contact-info span {
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .social-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .social-link:hover {
+        background: #00c8ff;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+    }
+
+    .social-link i {
+        font-size: 1.2rem;
+    }
+
+    .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        padding-top: 25px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .footer-bottom-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        /* flex-wrap: wrap; */
+        gap: 20px;
+    }
+
+    .footer-links {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .footer-links a {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+        color: #00c8ff;
+    }
+
+    .footer .contact-info {
+    display: flex;
+    gap: 15px;
+    flex-direction: row;
+    align-items: center;
+    }
+
+    .footer .social-links {
+    display: flex;
+    gap: 15px;
+    flex-direction: row;
+    align-items: center;
+    }
 
         /* Overlay, Nav, Loader same as your original */
         .ui-overlay { 
@@ -176,6 +338,71 @@
             </div>
         </section>
     </main>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-top">
+                <!-- Follow Us -->
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <p>Stay connected with us on social media for updates, events, and exciting club activities!</p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/spcew.a.v.e/" class="social-link" aria-label="Instagram">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="https://in.linkedin.com/company/spce-w-a-v-e" class="social-link" aria-label="LinkedIn">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://www.facebook.com/SPCEWAVE/" class="social-link" aria-label="Facebook">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@spcewave6765" class="social-link" aria-label="YouTube">
+                            <i class="fa-brands fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#team">Team</a></li>
+                        <li><a href="#gallery">Gallery</a></li>
+                        <li><a href="#sponsors">Sponsors</a></li>
+                        <li><a href="#support">Support Us</a></li>
+                        <li><a href="#legacy">Our Legacy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <div class="contact-info">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span>spcewave@spce.in</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fa-solid fa-phone"></i>
+                        <span>+91 99206 35938   </span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>Sardar Patel College of Engineering<br>Bhavan's Campus <br>Andheri (W), Mumbai - 400058</span>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <div>
+                        <p style="text-align: center;">&copy; 2025 SPCE WAVE. All rights reserved.<br></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 
 <script>
     // Loader
