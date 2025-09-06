@@ -112,7 +112,7 @@
             color: #184baa;
         }
 
-        .hero-section{
+        .hero-section {
             margin-top: -120px
         }
 
@@ -632,16 +632,16 @@
         }
 
         @media (max-width: 768px) {
-    .footer {
-        display: none !important;
-    }
-}
+            .footer {
+                display: none !important;
+            }
+        }
 
 
         /* Responsive */
         @media (max-width: 768px) {
 
-            .live{
+            .live {
                 opacity: 0;
             }
 
@@ -923,7 +923,7 @@
          For public usage, use the official CDN below (no account needed): -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script>
-        // Initialize scene with OBJLoader
+        // Initialize scene with proper asset loading management
         initScene();
 
         function initScene() {
@@ -939,22 +939,39 @@
                 alpha: true
             });
 
-            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Cap pixel ratio for performance
             renderer.setSize(window.innerWidth, window.innerHeight);
             camera.position.setZ(30);
 
-            // --- Asset Loading ---
+            // --- Asset Loading Management ---
             const loadingManager = new THREE.LoadingManager();
             const textureLoader = new THREE.TextureLoader(loadingManager);
             const loaderElement = document.getElementById('loader');
 
+            // Track loading states
             let assetsLoaded = false;
             let scrollAnimationsCreated = false;
+            let planeModelLoaded = false;
+            let earthLoaded = false;
+
+            // Assets tracking
+            const assets = {
+                earth: null,
+                clouds: null,
+                planeModel: null,
+                stars: null
+            };
 
             loadingManager.onLoad = () => {
                 assetsLoaded = true;
-                // Hide loader and start animations once everything is loaded
-                gsap.to(loaderElement, { opacity: 0, duration: 1, onComplete: () => loaderElement.style.display = 'none' });
+                console.log('All assets loaded');
+
+                // Hide loader
+                gsap.to(loaderElement, {
+                    opacity: 0,
+                    duration: 1,
+                    onComplete: () => loaderElement.style.display = 'none'
+                });
 
                 // Animate in the first section's content
                 gsap.from(".hero-section .content", {
@@ -964,11 +981,16 @@
                     delay: 0.5
                 });
 
-                // Create scroll animations after assets are loaded
-                if (!scrollAnimationsCreated) {
-                    createScrollAnimations();
-                    scrollAnimationsCreated = true;
-                }
+                // Create scroll animations only after all assets are loaded
+                createScrollAnimations();
+            };
+
+            loadingManager.onProgress = (item, loaded, total) => {
+                console.log(`Loading progress: ${loaded}/${total} - ${item}`);
+            };
+
+            loadingManager.onError = (error) => {
+                console.error('Loading error:', error);
             };
 
             // --- Lights ---
@@ -979,371 +1001,326 @@
 
             // --- 3D Objects ---
 
-            // Starfield
-            const starVertices = [];
-            for (let i = 0; i < 10000; i++) {
-                const x = (Math.random() - 0.5) * 2000;
-                const y = (Math.random() - 0.5) * 2000;
-                const z = (Math.random() - 0.5) * 2000;
-                starVertices.push(x, y, z);
-            }
-            const starGeometry = new THREE.BufferGeometry();
-            starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-            const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.7 });
-            const stars = new THREE.Points(starGeometry, starMaterial);
-            scene.add(stars);
-
-            // Earth with better texture sources and fallbacks
-            const earthGeometry = new THREE.SphereGeometry(15, 64, 64);
-            let earthMaterial, cloudMaterial;
-            let earth, clouds;
-
-            // Try multiple Earth texture sources
-            const earthTextureSources = [
-                'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/textures/planets/earth_atmos_2048.jpg',
-                'https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg',
-                'https://raw.githubusercontent.com/mrdoob/three.js/r128/examples/textures/planets/earth_atmos_2048.jpg'
-            ];
-
-            const cloudTextureSources = [
-                'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/textures/planets/earth_clouds_1024.png',
-                'https://threejs.org/examples/textures/planets/earth_clouds_1024.png',
-                'https://raw.githubusercontent.com/mrdoob/three.js/r128/examples/textures/planets/earth_clouds_1024.png'
-            ];
-
-            // Create fallback materials
-            function createFallbackEarth() {
-                // Create a blue-green earth-like material
-                const canvas = document.createElement('canvas');
-                canvas.width = canvas.height = 256;
-                const context = canvas.getContext('2d');
-
-                // Create a gradient that looks earth-like
-                const gradient = context.createLinearGradient(0, 0, 256, 256);
-                gradient.addColorStop(0, '#1e3c72');
-                gradient.addColorStop(0.3, '#2a5298');
-                gradient.addColorStop(0.5, '#0f4c75');
-                gradient.addColorStop(0.7, '#3282b8');
-                gradient.addColorStop(1, '#0f3460');
-
-                context.fillStyle = gradient;
-                context.fillRect(0, 0, 256, 256);
-
-                // Add some random noise for continents
-                context.fillStyle = '#2d5016';
-                for (let i = 0; i < 50; i++) {
-                    context.beginPath();
-                    context.arc(
-                        Math.random() * 256,
-                        Math.random() * 256,
-                        Math.random() * 20 + 5,
-                        0, Math.PI * 2
-                    );
-                    context.fill();
+            // Starfield (lightweight)
+            function createStarfield() {
+                const starVertices = [];
+                for (let i = 0; i < 5000; i++) { // Reduced from 10000 for performance
+                    const x = (Math.random() - 0.5) * 2000;
+                    const y = (Math.random() - 0.5) * 2000;
+                    const z = (Math.random() - 0.5) * 2000;
+                    starVertices.push(x, y, z);
                 }
-
-                const texture = new THREE.CanvasTexture(canvas);
-                return new THREE.MeshStandardMaterial({
-                    map: texture,
-                    bumpScale: 0.1,
-                    transparent: true,  // Enable transparency for animations
-                    opacity: 1
-                });
+                const starGeometry = new THREE.BufferGeometry();
+                starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+                const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.7 });
+                const stars = new THREE.Points(starGeometry, starMaterial);
+                scene.add(stars);
+                assets.stars = stars;
+                return stars;
             }
 
-            // Try to load Earth texture with fallback
-            let earthTextureLoaded = false;
-            let earthTextureIndex = 0;
+            const stars = createStarfield();
 
-            function tryLoadEarthTexture() {
-                if (earthTextureIndex >= earthTextureSources.length) {
-                    console.warn('All Earth texture sources failed, using procedural texture');
-                    earthMaterial = createFallbackEarth();
-                    earth = new THREE.Mesh(earthGeometry, earthMaterial);
-                    // Ensure material is ready for animations
-                    earth.material.transparent = true;
-                    earth.material.opacity = 1;
-                    scene.add(earth);
-                    return;
-                }
+            // Earth with better error handling
+            function createEarth() {
+                const earthGeometry = new THREE.SphereGeometry(15, 64, 64);
 
-                const earthTexture = textureLoader.load(
-                    earthTextureSources[earthTextureIndex],
-                    // onLoad
-                    (texture) => {
-                        console.log('Earth texture loaded successfully from source', earthTextureIndex);
-                        earthMaterial = new THREE.MeshStandardMaterial({
-                            map: texture,
-                            bumpScale: 0.2
-                        });
-                        earth = new THREE.Mesh(earthGeometry, earthMaterial);
-                        scene.add(earth);
-                        earthTextureLoaded = true;
-                    },
-                    // onProgress
-                    undefined,
-                    // onError
-                    (error) => {
-                        console.warn(`Earth texture source ${earthTextureIndex} failed:`, error);
-                        earthTextureIndex++;
-                        tryLoadEarthTexture();
+                // Fallback material
+                function createFallbackEarth() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = canvas.height = 512; // Increased resolution
+                    const context = canvas.getContext('2d');
+
+                    // Create earth-like gradient
+                    const gradient = context.createLinearGradient(0, 0, 512, 512);
+                    gradient.addColorStop(0, '#1e3c72');
+                    gradient.addColorStop(0.3, '#2a5298');
+                    gradient.addColorStop(0.5, '#0f4c75');
+                    gradient.addColorStop(0.7, '#3282b8');
+                    gradient.addColorStop(1, '#0f3460');
+
+                    context.fillStyle = gradient;
+                    context.fillRect(0, 0, 512, 512);
+
+                    // Add landmasses
+                    context.fillStyle = '#2d5016';
+                    for (let i = 0; i < 80; i++) {
+                        context.beginPath();
+                        context.arc(
+                            Math.random() * 512,
+                            Math.random() * 512,
+                            Math.random() * 30 + 10,
+                            0, Math.PI * 2
+                        );
+                        context.fill();
                     }
-                );
-            }
 
-            // Start loading Earth texture
-            tryLoadEarthTexture();
-
-            // Cloud Layer with fallback
-            const cloudGeometry = new THREE.SphereGeometry(15.2, 64, 64);
-            let cloudTextureLoaded = false;
-            let cloudTextureIndex = 0;
-
-            function createFallbackClouds() {
-                // Create a simple semi-transparent white material for clouds
-                return new THREE.MeshStandardMaterial({
-                    color: 0xffffff,
-                    transparent: true,
-                    opacity: 0.15,
-                    side: THREE.DoubleSide,
-                    depthWrite: false  // Helps with transparency rendering
-                });
-            }
-
-            function tryLoadCloudTexture() {
-                if (cloudTextureIndex >= cloudTextureSources.length) {
-                    console.warn('All cloud texture sources failed, using simple white clouds');
-                    cloudMaterial = createFallbackClouds();
-                    clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
-                    // Ensure material is ready for animations
-                    clouds.material.transparent = true;
-                    clouds.material.opacity = 0.3;
-                    scene.add(clouds);
-                    return;
-                }
-
-                const cloudTexture = textureLoader.load(
-                    cloudTextureSources[cloudTextureIndex],
-                    // onLoad
-                    (texture) => {
-                        console.log('Cloud texture loaded successfully from source', cloudTextureIndex);
-                        cloudMaterial = new THREE.MeshStandardMaterial({
-                            map: texture,
-                            transparent: true,
-                            opacity: 0.3
-                        });
-                        clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
-                        scene.add(clouds);
-                        cloudTextureLoaded = true;
-                    },
-                    // onProgress
-                    undefined,
-                    // onError
-                    (error) => {
-                        console.warn(`Cloud texture source ${cloudTextureIndex} failed:`, error);
-                        cloudTextureIndex++;
-                        tryLoadCloudTexture();
-                    }
-                );
-            }
-
-            // Start loading cloud texture
-            tryLoadCloudTexture();
-
-            // --- Plane Model with Multiple Materials ---
-            let planeModel;
-
-            // Load all texture maps for different materials
-            const textureMaps = {
-                // Color/Diffuse maps
-                color1: textureLoader.load('material58.png'),
-                color2: textureLoader.load('material60.png'),
-                color3: textureLoader.load('material62.png'),
-                color4: textureLoader.load('material64.png'),
-                color5: textureLoader.load('material66.png'),
-                color6: textureLoader.load('material68.png'),
-
-                // Normal maps
-                normal1: textureLoader.load('normalMap1.png'),
-                normal2: textureLoader.load('normalMap2.png'),
-                normal3: textureLoader.load('normalMap3.png'),
-                normal4: textureLoader.load('normalMap4.png'),
-                normal5: textureLoader.load('normalMap5.png'),
-                normal6: textureLoader.load('normalMap6.png'),
-
-                // Metalness maps
-                metalness1: textureLoader.load('metalnessMap1.png'),
-                metalness2: textureLoader.load('metalnessMap2.png'),
-                metalness3: textureLoader.load('metalnessMap3.png'),
-                metalness4: textureLoader.load('metalnessMap4.png'),
-                metalness5: textureLoader.load('metalnessMap5.png'),
-                metalness6: textureLoader.load('metalnessMap6.png')
-            };
-
-            // Set texture properties for all loaded textures
-            Object.values(textureMaps).forEach(texture => {
-                if (texture) {
-                    texture.flipY = false; // Important for OBJ models
-                    texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
-                }
-            });
-
-            // Create fallback materials array for manual assignment if needed
-            const fallbackMaterials = [
-                new THREE.MeshStandardMaterial({
-                    map: textureMaps.color1,
-                    normalMap: textureMaps.normal1,
-                    metalnessMap: textureMaps.metalness1,
-                    metalness: 0.7,
-                    roughness: 0.3
-                }),
-                new THREE.MeshStandardMaterial({
-                    map: textureMaps.color2,
-                    normalMap: textureMaps.normal2,
-                    metalnessMap: textureMaps.metalness2,
-                    metalness: 0.8,
-                    roughness: 0.4
-                }),
-                new THREE.MeshStandardMaterial({
-                    map: textureMaps.color3,
-                    normalMap: textureMaps.normal3,
-                    metalnessMap: textureMaps.metalness3,
-                    metalness: 0.6,
-                    roughness: 0.5
-                }),
-                new THREE.MeshStandardMaterial({
-                    map: textureMaps.color4,
-                    normalMap: textureMaps.normal4,
-                    metalnessMap: textureMaps.metalness4,
-                    metalness: 0.9,
-                    roughness: 0.2
-                }),
-                new THREE.MeshStandardMaterial({
-                    map: textureMaps.color5,
-                    normalMap: textureMaps.normal5,
-                    metalnessMap: textureMaps.metalness5,
-                    metalness: 0.7,
-                    roughness: 0.4
-                }),
-                new THREE.MeshStandardMaterial({
-                    map: textureMaps.color6,
-                    normalMap: textureMaps.normal6,
-                    metalnessMap: textureMaps.metalness6,
-                    metalness: 0.8,
-                    roughness: 0.3
-                })
-            ];
-
-
-            // Create fallback plane geometry
-            function createFallbackPlane() {
-                const planeGeometry = new THREE.BoxGeometry(2, 0.2, 4);
-                const fallbackMaterial = new THREE.MeshStandardMaterial({
-                    color: 0x4a90e2,
-                    metalness: 0.7,
-                    roughness: 0.3
-                });
-
-                const fallbackPlane = new THREE.Mesh(planeGeometry, fallbackMaterial);
-
-                // Add simple wings
-                const wingGeometry = new THREE.BoxGeometry(4, 0.1, 1);
-                const wingMaterial = new THREE.MeshStandardMaterial({
-                    color: 0x4a90e2,
-                    metalness: 0.7,
-                    roughness: 0.3
-                });
-
-                const leftWing = new THREE.Mesh(wingGeometry, wingMaterial);
-                const rightWing = new THREE.Mesh(wingGeometry, wingMaterial);
-
-                leftWing.position.set(-1, 0, 0);
-                rightWing.position.set(1, 0, 0);
-
-                fallbackPlane.add(leftWing, rightWing);
-
-                return fallbackPlane;
-            }
-            const mtlLoader = new THREE.MTLLoader();
-            mtlLoader.load('plane/plane.mtl', (materials) => {
-                materials.preload();
-                objLoader.setMaterials(materials);
-                objLoader.load('plane/plane.obj', (object) => {
-                    planeModel = object;
-                    planeModel.scale.set(0.1, 0.1, 0.1);
-                    planeModel.visible = false;
-                    scene.add(planeModel);
-                });
-            });
-
-
-            // Load OBJ model with proper texture application
-            const objLoader = new THREE.OBJLoader(loadingManager);
-
-            objLoader.load(
-                'plane.obj',
-                // onLoad callback
-                (object) => {
-                    planeModel = object;
-                    console.log('Plane model loaded successfully');
-
-                    // Apply textured material to all meshes in the model
-                    planeModel.traverse((child) => {
-                        if (child instanceof THREE.Mesh) {
-                            child.material = planeMaterial;
-                            child.castShadow = true;
-                            child.receiveShadow = true;
-                        }
+                    const texture = new THREE.CanvasTexture(canvas);
+                    return new THREE.MeshStandardMaterial({
+                        map: texture,
+                        bumpScale: 0.1
                     });
-
-                    // Set initial properties
-                    planeModel.scale.set(0.1, 0.1, 0.1);
-                    planeModel.position.set(0, 0, 0);
-                    planeModel.visible = false;
-
-                    // Store original scale for animations
-                    planeModel.userData.originalScale = 0.1;
-
-                    scene.add(planeModel);
-                },
-                // onProgress callback
-                (xhr) => {
-                    if (xhr.lengthComputable) {
-                        const percentComplete = xhr.loaded / xhr.total * 100;
-                        console.log('Plane model: ' + Math.round(percentComplete, 2) + '% loaded');
-                    }
-                },
-                // onError callback - use fallback
-                (error) => {
-                    console.error('Failed to load plane.obj model:', error);
-                    planeModel = createFallbackPlane();
-                    planeModel.scale.set(2, 2, 2);
-                    planeModel.position.set(0, 0, 0);
-                    planeModel.visible = false;
-                    planeModel.userData.originalScale = 2;
-                    scene.add(planeModel);
                 }
-            );
 
-            // --- Animate Loop ---
+                // Try loading earth texture with better fallback
+                const earthTextureSources = [
+                    'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/textures/planets/earth_atmos_2048.jpg',
+                    'https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg'
+                ];
+
+                let earthTextureIndex = 0;
+
+                function tryLoadEarthTexture() {
+                    if (earthTextureIndex >= earthTextureSources.length) {
+                        console.warn('Using fallback Earth texture');
+                        const earthMaterial = createFallbackEarth();
+                        const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+                        assets.earth = earth;
+                        scene.add(earth);
+                        earthLoaded = true;
+                        return;
+                    }
+
+                    textureLoader.load(
+                        earthTextureSources[earthTextureIndex],
+                        (texture) => {
+                            console.log('Earth texture loaded successfully');
+                            const earthMaterial = new THREE.MeshStandardMaterial({
+                                map: texture,
+                                bumpScale: 0.2
+                            });
+                            const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+                            assets.earth = earth;
+                            scene.add(earth);
+                            earthLoaded = true;
+                        },
+                        undefined,
+                        (error) => {
+                            console.warn(`Earth texture ${earthTextureIndex} failed:`, error);
+                            earthTextureIndex++;
+                            tryLoadEarthTexture();
+                        }
+                    );
+                }
+
+                tryLoadEarthTexture();
+            }
+
+            // Cloud layer with fallback
+            function createClouds() {
+                const cloudGeometry = new THREE.SphereGeometry(15.2, 64, 64);
+
+                function createFallbackClouds() {
+                    return new THREE.MeshStandardMaterial({
+                        color: 0xffffff,
+                        transparent: true,
+                        opacity: 0.2,
+                        side: THREE.DoubleSide
+                    });
+                }
+
+                const cloudTextureSources = [
+                    'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/textures/planets/earth_clouds_1024.png',
+                    'https://threejs.org/examples/textures/planets/earth_clouds_1024.png'
+                ];
+
+                let cloudTextureIndex = 0;
+
+                function tryLoadCloudTexture() {
+                    if (cloudTextureIndex >= cloudTextureSources.length) {
+                        console.warn('Using fallback cloud texture');
+                        const cloudMaterial = createFallbackClouds();
+                        const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
+                        assets.clouds = clouds;
+                        scene.add(clouds);
+                        return;
+                    }
+
+                    textureLoader.load(
+                        cloudTextureSources[cloudTextureIndex],
+                        (texture) => {
+                            console.log('Cloud texture loaded successfully');
+                            const cloudMaterial = new THREE.MeshStandardMaterial({
+                                map: texture,
+                                transparent: true,
+                                opacity: 0.3
+                            });
+                            const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
+                            assets.clouds = clouds;
+                            scene.add(clouds);
+                        },
+                        undefined,
+                        (error) => {
+                            console.warn(`Cloud texture ${cloudTextureIndex} failed:`, error);
+                            cloudTextureIndex++;
+                            tryLoadCloudTexture();
+                        }
+                    );
+                }
+
+                tryLoadCloudTexture();
+            }
+
+            // Initialize Earth and Clouds
+            createEarth();
+            createClouds();
+
+            // --- Plane Model with Proper Loading ---
+            function createPlaneModel() {
+                // Create fallback plane
+                function createFallbackPlane() {
+                    const group = new THREE.Group();
+
+                    // Main body
+                    const bodyGeometry = new THREE.BoxGeometry(2, 0.3, 5);
+                    const bodyMaterial = new THREE.MeshStandardMaterial({
+                        color: 0x4a90e2,
+                        metalness: 0.7,
+                        roughness: 0.3
+                    });
+                    const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+
+                    // Wings
+                    const wingGeometry = new THREE.BoxGeometry(6, 0.1, 1.5);
+                    const wingMaterial = new THREE.MeshStandardMaterial({
+                        color: 0x5a9bd4,
+                        metalness: 0.8,
+                        roughness: 0.2
+                    });
+                    const wings = new THREE.Mesh(wingGeometry, wingMaterial);
+                    wings.position.y = -0.1;
+
+                    // Tail
+                    const tailGeometry = new THREE.BoxGeometry(0.5, 1, 0.2);
+                    const tailMaterial = new THREE.MeshStandardMaterial({
+                        color: 0x4a90e2,
+                        metalness: 0.7,
+                        roughness: 0.3
+                    });
+                    const tail = new THREE.Mesh(tailGeometry, tailMaterial);
+                    tail.position.set(0, 0.3, -2);
+
+                    group.add(body, wings, tail);
+                    return group;
+                }
+
+                // Default plane material
+                const defaultPlaneMaterial = new THREE.MeshStandardMaterial({
+                    color: 0x4a90e2,
+                    metalness: 0.7,
+                    roughness: 0.3
+                });
+
+                // Try to load OBJ with MTL
+                const mtlLoader = new THREE.MTLLoader(loadingManager);
+                const objLoader = new THREE.OBJLoader(loadingManager);
+
+                // First try to load with MTL
+                mtlLoader.load(
+                    'plane/plane.mtl',
+                    (materials) => {
+                        materials.preload();
+                        console.log('MTL materials loaded');
+
+                        objLoader.setMaterials(materials);
+                        objLoader.load(
+                            'plane/plane.obj',
+                            (object) => {
+                                console.log('OBJ with MTL loaded successfully');
+                                setupPlaneModel(object);
+                            },
+                            undefined,
+                            (error) => {
+                                console.warn('OBJ with MTL failed, trying without MTL:', error);
+                                tryLoadOBJWithoutMTL();
+                            }
+                        );
+                    },
+                    undefined,
+                    (error) => {
+                        console.warn('MTL loading failed, trying OBJ without MTL:', error);
+                        tryLoadOBJWithoutMTL();
+                    }
+                );
+
+                // Fallback to OBJ without MTL
+                function tryLoadOBJWithoutMTL() {
+                    const objLoaderFallback = new THREE.OBJLoader(loadingManager);
+
+                    objLoaderFallback.load(
+                        'plane.obj',
+                        (object) => {
+                            console.log('OBJ without MTL loaded successfully');
+
+                            // Apply default material to all meshes
+                            object.traverse((child) => {
+                                if (child instanceof THREE.Mesh) {
+                                    child.material = defaultPlaneMaterial;
+                                    child.castShadow = true;
+                                    child.receiveShadow = true;
+                                }
+                            });
+
+                            setupPlaneModel(object);
+                        },
+                        undefined,
+                        (error) => {
+                            console.error('All OBJ loading attempts failed, using fallback:', error);
+                            const fallbackPlane = createFallbackPlane();
+                            setupPlaneModel(fallbackPlane);
+                        }
+                    );
+                }
+
+                // Setup plane model regardless of how it was loaded
+                function setupPlaneModel(model) {
+                    assets.planeModel = model;
+                    model.scale.set(0.1, 0.1, 0.1);
+                    model.position.set(0, 0, 0);
+                    model.visible = false;
+                    model.userData.originalScale = 0.1;
+
+                    scene.add(model);
+                    planeModelLoaded = true;
+                    console.log('Plane model setup complete');
+                }
+            }
+
+            // Initialize plane model
+            createPlaneModel();
+
+            // --- Animation Loop ---
+            let animationId;
+
             function animate() {
-                requestAnimationFrame(animate);
+                animationId = requestAnimationFrame(animate);
 
-                // Continuous rotations
-                if (earth) earth.rotation.y += 0.0005;
-                if (clouds) clouds.rotation.y += 0.0007;
-                stars.rotation.y += 0.0001;
+                // Continuous rotations with null checks
+                if (assets.earth) assets.earth.rotation.y += 0.0005;
+                if (assets.clouds) assets.clouds.rotation.y += 0.0007;
+                if (assets.stars) assets.stars.rotation.y += 0.0001;
 
                 renderer.render(scene, camera);
-            }
-            if (!window.location.hash.includes('#reloaded')) {
-                window.location.hash = '#reloaded';
-                window.location.reload();
             }
             animate();
 
             // --- GSAP Scroll-Triggered Animations ---
             function createScrollAnimations() {
+                if (scrollAnimationsCreated) return;
+
+                console.log('Creating scroll animations...');
+
+                // Ensure we have references to our assets
+                const earth = assets.earth;
+                const clouds = assets.clouds;
+                const planeModel = assets.planeModel;
+
+                if (!planeModel) {
+                    console.warn('Plane model not loaded yet, retrying in 500ms');
+                    setTimeout(createScrollAnimations, 500);
+                    return;
+                }
+
                 const tl = gsap.timeline({
                     scrollTrigger: {
                         trigger: ".main-content",
@@ -1351,138 +1328,147 @@
                         end: "bottom bottom",
                         scrub: 1.5,
                         onUpdate: (self) => {
-                            // Handle Earth/Plane visibility based on scroll position
                             const progress = self.progress;
 
-                            // Show Earth for first 3 sections (0 to ~0.5)
+                            // Earth sections (0 to ~0.5)
                             if (progress < 0.5) {
                                 if (earth && !earth.parent) {
                                     scene.add(earth);
-                                    console.log('Earth restored to scene');
                                 }
                                 if (clouds && !clouds.parent) {
                                     scene.add(clouds);
-                                    console.log('Clouds restored to scene');
                                 }
                                 if (planeModel && planeModel.visible) {
                                     planeModel.visible = false;
-                                    console.log('Plane hidden for Earth view');
                                 }
                             }
-                            // Show plane for sections 4-6 (0.5 to 1.0) - ends with sponsors
+                            // Plane sections (0.5 to 1.0)
                             else {
                                 if (earth && earth.parent) {
                                     scene.remove(earth);
-                                    console.log('Earth removed for plane view');
                                 }
                                 if (clouds && clouds.parent) {
                                     scene.remove(clouds);
-                                    console.log('Clouds removed for plane view');
                                 }
                                 if (planeModel && !planeModel.visible) {
                                     planeModel.visible = true;
-                                    console.log('Plane shown for plane sections');
                                 }
                             }
                         },
                         onComplete: () => {
-                            // Ensure plane is hidden when animation completes
                             if (planeModel) {
                                 planeModel.visible = false;
-                                console.log('Plane hidden after animation completion');
                             }
-                            // Reset camera for footer
                             gsap.to(camera.position, { x: 0, y: 0, z: 30, duration: 1 });
                         }
                     }
                 });
 
-                // Start: Initial view of Earth
+                // Animation sequence with null checks
                 tl.to(camera.position, { z: 30, duration: 1 })
 
-                    // Section 2: Zoom into Earth (About SPCE)
+                    // Section 2: Zoom into Earth
                     .to(camera.position, { x: -5, y: 15, z: 20, duration: 2 }, 'scene2')
-                    .to(earth ? earth.rotation : { x: 0, y: 0, z: 0 }, { y: "+=3", duration: 2 }, 'scene2')
+                    .to(earth ? earth.rotation : { y: 0 }, { y: "+=3", duration: 2 }, 'scene2')
 
-                    // Section 3: Pan around Earth (About WAVE)
+                    // Section 3: Pan around Earth
                     .to(camera.position, { x: 0, y: 0, z: 40, duration: 2 }, 'scene3')
-                    .to(earth ? earth.rotation : { x: 0, y: 0, z: 0 }, { y: "+=1", duration: 2 }, 'scene3')
+                    .to(earth ? earth.rotation : { y: 0 }, { y: "+=1", duration: 2 }, 'scene3')
 
-                    // Section 4: Transition to Plane model (Vision)
-                    .fromTo(planeModel ? planeModel.scale : { x: 0, y: 0, z: 0 },
+                    // Section 4: Transition to Plane
+                    .fromTo(planeModel ? planeModel.scale : { x: 0.1, y: 0.1, z: 0.1 },
                         { x: 0.01, y: 0.01, z: 0.01 },
                         { x: 0.3, y: 0.3, z: 0.3, duration: 2 }, 'scene4')
                     .to(camera.position, { x: 100, y: 50, z: 200, duration: 2 }, 'scene4')
                     .to(planeModel ? planeModel.rotation : { x: 0, y: 0, z: 0 },
                         { x: 0, y: Math.PI * 0.5, z: 0, duration: 2 }, 'scene4')
 
-                    // Section 5: Show different angles (Mission)
+                    // Section 5: Different angles
                     .to(planeModel ? planeModel.rotation : { x: 0, y: 0, z: 0 },
                         { x: 0, y: Math.PI, z: 0, duration: 3 }, 'scene5')
                     .to(camera.position, { x: 150, y: 50, z: 300, duration: 3 }, 'scene5')
 
-                    // Section 6: Final plane showcase (Sponsors) - end animation here
+                    // Section 6: Final showcase
                     .to(planeModel ? planeModel.rotation : { x: 0, y: 0, z: 0 },
                         { x: Math.PI * 0.1, y: Math.PI * 1.5, z: 0, duration: 3 }, 'scene6')
                     .to(camera.position, { x: 0, y: 100, z: 250, duration: 3 }, 'scene6')
-                    .to(planeModel ? planeModel.scale : { x: 0, y: 0, z: 0 },
+                    .to(planeModel ? planeModel.scale : { x: 0.3, y: 0.3, z: 0.3 },
                         { x: 0.4, y: 0.4, z: 0.4, duration: 2 }, 'scene6')
-                    // Section 7: Final smooth rotation - keep plane right-side up
+
+                    // Section 7: Final rotation
                     .to(planeModel ? planeModel.rotation : { x: 0, y: 0, z: 0 },
                         { x: 0, y: Math.PI * 2, z: 0, duration: 4 }, 'scene7')
                     .to(camera.position, { x: 100, y: 170, z: 300, duration: 4 }, 'scene7')
-                    .to(planeModel ? planeModel.scale : { x: 0, y: 0, z: 0 },
+                    .to(planeModel ? planeModel.scale : { x: 0.4, y: 0.4, z: 0.4 },
                         { x: 0.25, y: 0.25, z: 0.25, duration: 2 }, 'scene7');
-                console.log('Scroll animations created - ends with sponsors section');
-            }
 
-            // Create animations after a short delay to ensure everything is set up
-            if (!scrollAnimationsCreated) {
-                setTimeout(() => {
-                    if (!scrollAnimationsCreated) {
-                        createScrollAnimations();
-                        scrollAnimationsCreated = true;
-                    }
-                }, 1000);
+                scrollAnimationsCreated = true;
+                console.log('Scroll animations created successfully');
             }
 
             // --- Window Resize Handler ---
-            window.addEventListener('resize', () => {
+            function handleResize() {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+            window.addEventListener('resize', handleResize);
+
+            // Cleanup function
+            window.addEventListener('beforeunload', () => {
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                }
+
+                // Dispose of geometries and materials
+                scene.traverse((object) => {
+                    if (object.geometry) object.geometry.dispose();
+                    if (object.material) {
+                        if (Array.isArray(object.material)) {
+                            object.material.forEach(material => material.dispose());
+                        } else {
+                            object.material.dispose();
+                        }
+                    }
+                });
+
+                renderer.dispose();
+                window.removeEventListener('resize', handleResize);
             });
         }
 
-        // Hamburger Menu Toggle
+        // Menu functionality (unchanged)
         const hamburger = document.getElementById('hamburger');
         const navMenu = document.querySelector('.nav-menu');
 
-        hamburger.addEventListener('click', () => {
-            document.body.classList.toggle('menu-open');
-            navMenu.classList.toggle('active');
-            navMenu.classList.toggle('collapsed');
-        });
+        if (hamburger && navMenu) {
+            hamburger.addEventListener('click', () => {
+                document.body.classList.toggle('menu-open');
+                navMenu.classList.toggle('active');
+                navMenu.classList.toggle('collapsed');
+            });
 
-        // Close menu when clicking a nav link on mobile
-        document.querySelectorAll('.nav-menu a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth <= 768) {
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth <= 768) {
+                        document.body.classList.remove('menu-open');
+                        navMenu.classList.remove('active');
+                        navMenu.classList.add('collapsed');
+                    }
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768 &&
+                    !navMenu.contains(e.target) &&
+                    !hamburger.contains(e.target)) {
                     document.body.classList.remove('menu-open');
                     navMenu.classList.remove('active');
                     navMenu.classList.add('collapsed');
                 }
             });
-        });
-
-        // Close menu when clicking outside on mobile
-        document.addEventListener('click', (e) => {
-            if (window.innerWidth <= 768 && !navMenu.contains(e.target) && !hamburger.contains(e.target)) {
-                document.body.classList.remove('menu-open');
-                navMenu.classList.remove('active');
-                navMenu.classList.add('collapsed');
-            }
-        });
+        }
     </script>
     <script src="https://kit.fontawesome.com/2f3e6f5b15.js" crossorigin="anonymous"></script>
 </body>
