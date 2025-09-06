@@ -631,6 +631,13 @@
             color: #00c8ff;
         }
 
+        @media (max-width: 768px) {
+    .footer {
+        display: none !important;
+    }
+}
+
+
         /* Responsive */
         @media (max-width: 768px) {
 
@@ -1329,7 +1336,10 @@
 
                 renderer.render(scene, camera);
             }
-            window.location.reload();
+            if (!window.location.hash.includes('#reloaded')) {
+                window.location.hash = '#reloaded';
+                window.location.reload();
+            }
             animate();
 
             // --- GSAP Scroll-Triggered Animations ---
