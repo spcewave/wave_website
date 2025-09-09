@@ -577,14 +577,6 @@
         color: rgba(255, 255, 255, 0.8);
     }
 
-    .footer-bottom-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        /* flex-wrap: wrap; */
-        gap: 20px;
-    }
-
     .footer-links {
         display: flex;
         gap: 30px;
@@ -620,9 +612,8 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: space-evenly;
-		align-items: center;
 		height: 30vh;
-		margin: 100px;
+		margin: 100px 50px 100px;
 	}
 	.faculty-container {
 		display: flex;
@@ -640,7 +631,9 @@
   display: block;
   /* width: 900px; */
   width: 80%;
-  margin: 0 auto;
+  margin: 100px;
+  margin-top: 200px;
+  
   padding: 20px 25px;
 
   /* Glass effect */
@@ -738,18 +731,15 @@
 .timeline .year {
   /* font-weight: bold; */
   margin-right: 15px;
-  font-size: 1.5rem;
+  /* font-size: 1.5rem; */
   /* color: #444; */
 
 		color: #848696;
 }
-
-.timeline .captain {
-  /* color: #444; */
-  /* font-weight: 600; */
-  font-size: 1.8rem;
-}
-
+.hero_title {
+        margin-top: 8rem;
+        margin-bottom: 8rem
+    }
 
 
 
@@ -758,6 +748,15 @@
     width: 95%;
     padding: 15px;
   }
+
+  .timeline .year {
+  /* font-weight: bold; */
+  margin-right: 15px;
+  font-size: 0.8rem;
+  /* color: #444; */
+
+		color: #848696;
+}
 
   #keywords {
     font-size: 1rem;
@@ -794,11 +793,18 @@
 
 	@media (max-width: 768px) {
 
+
+  .faculty-container img {
+	width: 30vw;
+  }
+
 		.logo-img {
 			width: 50px;
 		}
 
 		.about-title {
+			margin-top: 2rem;
+			margin-bottom: 2rem;
 			font-size: 2rem;
 		}
 
@@ -886,10 +892,18 @@
 			z-index: 999;
 		}
 
+		.member-name {
+			font-size: 1.7rem;
+		}
+
 		.nav-menu.active {
 			opacity: 1;
 			transform: translateY(0) scale(1);
 			pointer-events: auto;
+		}
+
+		.member-role {
+			font-size: 0.85rem;
 		}
 
 		.nav-menu a {
@@ -909,6 +923,28 @@
 		.ui-overlay {
 			width: 100%;
 		}
+
+		.footer-only-desktop {
+        display: none;
+    }
+
+    .contact-info i {
+        margin: 0;
+    }
+
+    .footer-top {
+        display: flex;
+        flex-direction: column;
+    }
+    .footer-bottom {
+        display: flex;
+        flex-direction: column;
+    }
+	.hero_title {
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+        font-size: 2.5rem;
+    }
 	}
 </style>
 </head>
@@ -1018,14 +1054,14 @@
 	</div>
 	<section class="faculty">
 		<div class ="faculty-container">
-			<p class="member-role">Faculty Advisor</p>
+			<p class="member-role" style="text-align: center;">Present <br>Faculty Advisor</p>
 			<img src="kunal.png" alt="Maurya">
-			<h2 class="member-name">Prof. Kunal Bhavsar</h2>
+			<h2 class="member-name" style="text-align: center;">Prof. Kunal Bhavsar</h2>
 		</div>
 		<div class ="faculty-container">
-			<p class="member-role">Past Faculty Advisor</p>
+			<p class="member-role" style="text-align: center;">Past<br>Faculty Advisor</p>
 			<img src="maurya.png" alt="Maurya">
-			<h2 class="member-name">Dr. RS Maurya</h2>
+			<h2 class="member-name" style="text-align: center;">Dr. RS Maurya</h2>
 		</div>
 	</section>
 	<div id="wrapper">
@@ -1148,7 +1184,7 @@
                 </div>
 
                 <!-- Quick Links -->
-                <div class="footer-section">
+                <div class="footer-section footer-only-desktop">
                     <h3>Quick Links</h3>
                     <ul>
                         <li><a href="/index.html">Home</a></li>
@@ -1184,6 +1220,9 @@
                 <div class="footer-bottom-content">
                     <div>
                         <p style="text-align: center;">&copy; 2025 SPCE WAVE. All rights reserved.<br></p>
+                        <a href="/credits.html" style="text-align: left; color: rgba(255, 255, 255, 0.8);"><br>Credits</a>
+                    </div>
+                    <div>
                     </div>
                 </div>
             </div>

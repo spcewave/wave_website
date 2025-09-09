@@ -410,10 +410,10 @@ h2 {
  
 /* INCREASED SPACING BETWEEN SECTIONS */
 .tier-platinum {
-  margin-bottom: 150px;
+  margin-bottom: 50px;
 }
 .tier-gold {
-  margin-bottom: 130px;
+  margin-bottom: 50px;
 }
  
 /* ALIGN SILVER AND PLATINUM TITLES LEFT WITH THEIR BULLET POINTS */
@@ -532,6 +532,7 @@ ul.checklist li::before {
   background: linear-gradient(270deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8f00ff, #ff0000);
   background-size: 1400% 1400%;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: colorfulShimmer 12s ease infinite;
   text-shadow: none; /* REMOVED ALL BLUR */
@@ -723,14 +724,6 @@ ul.checklist li::before {
         color: rgba(255, 255, 255, 0.8);
     }
 
-    .footer-bottom-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        /* flex-wrap: wrap; */
-        gap: 20px;
-    }
-
     .footer-links {
         display: flex;
         gap: 30px;
@@ -766,6 +759,23 @@ ul.checklist li::before {
    RESPONSIVE DESIGN
    ========================= */
 @media (max-width: 768px) {
+    .footer-only-desktop {
+        display: none;
+    }
+
+    .contact-info i {
+        margin: 0;
+    }
+
+    .footer-top {
+        display: flex;
+        flex-direction: column;
+    }
+    .footer-bottom {
+        display: flex;
+        flex-direction: column;
+    }
+
     .sponsor-side-image {
         display: none; /* Hide side images on small screens */
     }
@@ -849,6 +859,19 @@ ul.checklist li::before {
     ul.checklist li {
         font-size: 1.05rem;
     }
+    }
+
+    .tier-left {
+  margin-left: 0;
+  margin-right: auto;
+  max-width: 100%;
+  text-align: left;
+}
+.tier-right {
+  margin-left: auto;
+  margin-right: 0;
+  max-width: 100%;
+  text-align: left;
 }
 
 }
@@ -983,8 +1006,8 @@ ul.checklist li::before {
             <h2 class="section-title">A380 Gold Package <br> ₹ 10,000 or above</h2>
             <ul class="checklist">
                 <li>Event participation access for brand networking.</li>
-                <li>Logo placement on team apparel (lower back).</li>
                 <li>Banner placement during internal campus promotional events.</li>
+                <li>Logo placement on team apparel (lower back).</li>
                 <li>Mention in College Magazine under Silver Sponsors.</li>
                 <li>Social media shoutouts during competition weeks.</li>
             </ul>
@@ -1081,7 +1104,7 @@ ul.checklist li::before {
                 </div>
 
                 <!-- Quick Links -->
-                <div class="footer-section">
+                <div class="footer-section footer-only-desktop">
                     <h3>Quick Links</h3>
                     <ul>
                         <li><a href="/index.html">Home</a></li>
@@ -1117,6 +1140,9 @@ ul.checklist li::before {
                 <div class="footer-bottom-content">
                     <div>
                         <p style="text-align: center;">&copy; 2025 SPCE WAVE. All rights reserved.<br></p>
+                        <a href="/credits.html" style="text-align: left; color: rgba(255, 255, 255, 0.8);"><br>Credits</a>
+                    </div>
+                    <div>
                     </div>
                 </div>
             </div>

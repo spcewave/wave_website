@@ -261,12 +261,18 @@ h2 {
     font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 700;
     margin-bottom: 10px;
+    text-align: center;
+    width: 90px;
 }
 .Rank {
     color: var(--accent-color);
     font-size: 10rem;
     font-weight: 900;
     line-height: 1;
+}
+
+.spacer {
+    height: 60px;
 }
 
 .rank-contents {
@@ -527,14 +533,6 @@ h2 {
         color: rgba(255, 255, 255, 0.8);
     }
 
-    .footer-bottom-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        /* flex-wrap: wrap; */
-        gap: 20px;
-    }
-
     .footer-links {
         display: flex;
         gap: 30px;
@@ -566,10 +564,29 @@ h2 {
     align-items: center;
     }
 
+    .hero_title {
+        margin-top: 8rem;
+        margin-bottom: 8rem
+    }
+
+    .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
 /* =========================
    RESPONSIVE DESIGN
    ========================= */
 @media (max-width: 768px) {
+
+    .hero_title {
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+        font-size: 2.5rem;
+    }
+
     .hamburger,
     .vbp-header-menu-button__svg {
         display: block;
@@ -589,6 +606,22 @@ h2 {
 
     .logo-img {
         width: 50px;
+    }
+
+    .spacer {
+        height: 0;
+    }
+
+    .rank-contents{
+        justify-content: center;
+        gap: 10px;
+        margin-top: 0;
+    }
+
+    .rank-container{
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
     }
 
     .nav-menu {
@@ -616,6 +649,16 @@ h2 {
         opacity: 1;
         transform: translateY(0) scale(1);
         pointer-events: auto;
+    }
+
+    .Air {
+        margin-bottom: 0;
+        width: 90px;
+        text-align: center;
+    }
+
+    .Air p {
+        margin-bottom: 0;
     }
     
     .nav-menu a {
@@ -652,10 +695,70 @@ h2 {
     .image-container {
         max-width: 100%;
         height: 300px;
+        position: relative;
     }
-    .hero-section h1 {
-        font-size: 2.5rem;
-        margin-top: 100px;
+    .image-container .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 10px;
+}
+.slideshow-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .image-container {
+        max-width: 100%;
+        height: 300px;
+        width: 90vw;
+        flex-shrink: 0; /* Add this line */
+        position: relative;
+    }
+    .achievements-container {
+        flex-direction: column;
+        gap: 30px;
+        height: auto; /* Add this */
+    }
+    
+    .image-container {
+        max-width: 100%;
+        height: 300px !important; /* Force the height */
+        position: relative;
+        flex: none; /* Remove flex behavior */
+        border-radius: 10px;
+    }
+
+    .footer-only-desktop {
+        display: none;
+    }
+
+    .contact-info i {
+        margin: 0;
+    }
+
+    .footer-top {
+        display: flex;
+        flex-direction: column;
+    }
+    .footer-bottom {
+        display: flex;
+        flex-direction: column;
     }
 }
     </style>
@@ -687,14 +790,16 @@ h2 {
     </div>
     <main>
         <section class="section hero-section">
-            <h1 style="margin-top: 8rem; margin-bottom: 8rem;">Our Legacy</h1>
+            <h1 class="hero_title">Our Legacy</h1>
             <div class="achievement"> <!-- VAYU -->
                 <h2>VAYU<span class="toggle-arrow"><img src="arrow2.png" alt="Toggle achievement details" style="width: 20px;" loading="lazy"></span></h2>
                 <div class="achievement-content">
                     <div class="achievements-container">
                         <div class="rank-container">
+                            <div>
                             <p class="Air">AIR</p>
                             <h1 class="Rank">1</h1>
+                            </div>
                         </div>
                         <div class="rank-contents">
                             <p>Overall Performance</p>
@@ -703,10 +808,10 @@ h2 {
                         <div class="image-container">
                             <div class="slideshow-container" data-slideshow-id="1" role="region" aria-label="Achievement slideshow">
                                 <div class="slide active">
-                                    <img src="our legacy/24-1.jpg" alt="SAE Achievement 1" loading="lazy">
+                                    <img src="our_legacy/24-1.jpg" alt="SAE Achievement 1" loading="lazy">
                                 </div>
                                 <div class="slide">
-                                    <img src="our legacy/24-2.jpg" alt="SAE Achievement 2" loading="lazy">
+                                    <img src="our_legacy/24-2.jpg" alt="SAE Achievement 2" loading="lazy">
                                 </div>
                                 <button class="slideshow-arrows prev-arrow" aria-label="Previous slide">❮</button>
                                 <button class="slideshow-arrows next-arrow" aria-label="Next slide">❯</button>
@@ -734,16 +839,16 @@ h2 {
                         <div class="image-container">
                             <div class="slideshow-container" data-slideshow-id="2" role="region" aria-label="Achievement slideshow">
                                 <div class="slide active">
-                                    <img src="our legacy/25-1.jpg" alt="SAE Achievement 1" loading="lazy">
+                                    <img src="our_legacy/25-1.jpg" alt="SAE Achievement 1" loading="lazy">
                                 </div>
                                 <div class="slide">
-                                    <img src="our legacy/25-2.jpg" alt="SAE Achievement 2" loading="lazy">
+                                    <img src="our_legacy/25-2.jpg" alt="SAE Achievement 2" loading="lazy">
                                 </div>
                                 <div class="slide">
-                                    <img src="our legacy/25-3.jpg" alt="SAE Achievement 2" loading="lazy">
+                                    <img src="our_legacy/25-3.jpg" alt="SAE Achievement 2" loading="lazy">
                                 </div>
                                 <div class="slide">
-                                    <img src="our legacy/25-4.jpg" alt="SAE Achievement 2" loading="lazy">
+                                    <img src="our_legacy/25-4.jpg" alt="SAE Achievement 2" loading="lazy">
                                 </div>
                                 <button class="slideshow-arrows prev-arrow" aria-label="Previous slide">❮</button>
                                 <button class="slideshow-arrows next-arrow" aria-label="Next slide">❯</button>
@@ -771,7 +876,7 @@ h2 {
                         <div class="image-container">
                             <div class="slideshow-container" data-slideshow-id="2" role="region" aria-label="Achievement slideshow">
                                 <div class="slide active">
-                                    <img src="our legacy/boeing-1.jpg" alt="SAE Achievement 1" loading="lazy">
+                                    <img src="our_legacy/boeing-1.jpg" alt="SAE Achievement 1" loading="lazy">
                                 </div>
                                 <!-- <div class="slide">
                                     <img src="max_2.jpg" alt="SAE Achievement 2">
@@ -793,27 +898,31 @@ h2 {
                 <div class="achievement-content">
                     <div class="achievements-container">
                         <div class="rank-container">
-                            <p class="Air">AIR</p>
-                            <h1 class="Rank">2</h1>
-                            <p class="Air">AIR</p>
-                            <h1 class="Rank">4</h1>
+                            <div>
+                                <p class="Air">AIR</p>
+                                <h1 class="Rank">2</h1>
+                            </div>
+                            <div>
+                                <p class="Air">AIR</p>
+                                <h1 class="Rank">4</h1>
+                            </div>
                         </div>
                         <div class="rank-contents">
                             <p style="height: 0.5rem;"><br></p>
                             <p>Technical Presentation</p>
-                            <p><br><br><br></p>
+                            <div class="spacer"></div>
                             <p>Overall Performance</p>
                         </div>
                         <div class="image-container">
                             <div class="slideshow-container" data-slideshow-id="3" role="region" aria-label="Achievement slideshow">
                                 <div class="slide active">
-                                    <img src="our legacy/23-1.jpg" alt="SAE Achievement 1" loading="lazy">
+                                    <img src="our_legacy/23-1.jpg" alt="SAE Achievement 1" loading="lazy">
                                 </div>
                                 <div class="slide">
-                                    <img src="our legacy/23-2.jpg" alt="SAE Achievement 2" loading="lazy">
+                                    <img src="our_legacy/23-2.jpg" alt="SAE Achievement 2" loading="lazy">
                                 </div>
                                 <div class="slide">
-                                    <img src="our legacy/23-3.jpg" alt="SAE Achievement 2" loading="lazy">
+                                    <img src="our_legacy/23-3.jpg" alt="SAE Achievement 2" loading="lazy">
                                 </div>
                                 <button class="slideshow-arrows prev-arrow" aria-label="Previous slide">❮</button>
                                 <button class="slideshow-arrows next-arrow" aria-label="Next slide">❯</button>
@@ -832,27 +941,31 @@ h2 {
                 <div class="achievement-content">
                     <div class="achievements-container">
                         <div class="rank-container">
+                            <div>
                             <p class="Air">AIR</p>
                             <h1 class="Rank">2</h1>
+                            </div>
+                            <div>
                             <p class="Air">AIR</p>
                             <h1 class="Rank">3</h1>
+                            </div>
                         </div>
                         <div class="rank-contents">
                             <p style="height: 0.5rem;"><br></p>
                             <p>Technical Presentation</p>
-                            <p><br><br><br></p>
+                            <div class="spacer"></div>
                             <p>Overall Performance</p>
                         </div>
                         <div class="image-container">
                             <div class="slideshow-container" data-slideshow-id="3" role="region" aria-label="Achievement slideshow">
                                 <div class="slide active">
-                                    <img src="our legacy/22-1.jpg" alt="SAE Achievement 1" loading="lazy">
+                                    <img src="our_legacy/22-1.jpg" alt="SAE Achievement 1" loading="lazy">
                                 </div>
                                 <div class="slide">
-                                    <img src="our legacy/22-2.JPG" alt="SAE Achievement 2" loading="lazy">
+                                    <img src="our_legacy/22-2.JPG" alt="SAE Achievement 2" loading="lazy">
                                 </div>
                                 <div class="slide">
-                                    <img src="our legacy/22-3.JPG" alt="SAE Achievement 2" loading="lazy">
+                                    <img src="our_legacy/22-3.JPG" alt="SAE Achievement 2" loading="lazy">
                                 </div>
                                 <button class="slideshow-arrows prev-arrow" aria-label="Previous slide">❮</button>
                                 <button class="slideshow-arrows next-arrow" aria-label="Next slide">❯</button>
@@ -871,8 +984,10 @@ h2 {
                 <div class="achievement-content">
                     <div class="achievements-container">
                         <div class="rank-container">
-                            <p class="Air">AIR</p>
-                            <h1 class="Rank">2</h1>
+                            <div>
+                                <p class="Air">AIR</p>
+                                <h1 class="Rank">2</h1>
+                            </div>
                         </div>
                         <div class="rank-contents">
                             <p>Overall Performance</p>
@@ -880,7 +995,7 @@ h2 {
                         <div class="image-container">
                             <div class="slideshow-container" data-slideshow-id="3" role="region" aria-label="Achievement slideshow">
                                 <div class="slide active">
-                                    <img src="our legacy/max.jpeg" alt="SAE Achievement 1" loading="lazy">
+                                    <img src="our_legacy/max.jpeg" alt="SAE Achievement 1" loading="lazy">
                                 </div>
                                 <div class="slide">
                                     <img src="max_2.jpg" alt="SAE Achievement 2" loading="lazy">
@@ -902,8 +1017,10 @@ h2 {
                 <div class="achievement-content">
                     <div class="achievements-container">
                         <div class="rank-container">
-                            <p class="Air">AIR</p>
-                            <h1 class="Rank">8</h1>
+                            <div>
+                                <p class="Air">AIR</p>
+                                <h1 class="Rank">8</h1>
+                            </div>
                         </div>
                         <div class="rank-contents">
                             <p>Overall Performance</p>
@@ -911,13 +1028,13 @@ h2 {
                         <div class="image-container">
                             <div class="slideshow-container" data-slideshow-id="3" role="region" aria-label="Achievement slideshow">
                                 <div class="slide active">
-                                    <img src="our legacy/20-1.png" alt="SAE Achievement 1" loading="lazy">
+                                    <img src="our_legacy/20-1.png" alt="SAE Achievement 1" loading="lazy">
                                 </div>
                                 <div class="slide">
-                                    <img src="our legacy/20-2.png" alt="SAE Achievement 2" loading="lazy">
+                                    <img src="our_legacy/20-2.png" alt="SAE Achievement 2" loading="lazy">
                                 </div>
                                 <div class="slide">
-                                    <img src="our legacy/20-3 final.png" alt="SAE Achievement 2" loading="lazy">
+                                    <img src="our_legacy/20-3 final.png" alt="SAE Achievement 2" loading="lazy">
                                 </div>
                                 <button class="slideshow-arrows prev-arrow" aria-label="Previous slide">❮</button>
                                 <button class="slideshow-arrows next-arrow" aria-label="Next slide">❯</button>
@@ -936,8 +1053,10 @@ h2 {
                 <div class="achievement-content">
                     <div class="achievements-container">
                         <div class="rank-container">
-                            <p class="Air">AIR</p>
-                            <h1 class="Rank">11</h1>
+                            <div>
+                                <p class="Air">AIR</p>
+                                <h1 class="Rank">11</h1>
+                            </div>
                         </div>
                         <div class="rank-contents">
                             <p>Overall Performance</p>
@@ -945,13 +1064,13 @@ h2 {
                         <div class="image-container">
                             <div class="slideshow-container" data-slideshow-id="3" role="region" aria-label="Achievement slideshow">
                                 <div class="slide active">
-                                    <img src="our legacy/19-1.jpg" alt="SAE Achievement 1" loading="lazy">
+                                    <img src="our_legacy/19-1.jpg" alt="SAE Achievement 1" loading="lazy">
                                 </div>
                                 <div class="slide">
-                                    <img src="our legacy/19-2.jpg" alt="SAE Achievement 2" loading="lazy">
+                                    <img src="our_legacy/19-2.jpg" alt="SAE Achievement 2" loading="lazy">
                                 </div>
                                 <div class="slide">
-                                    <img src="our legacy/19-3.jpg" alt="SAE Achievement 2" loading="lazy">
+                                    <img src="our_legacy/19-3.jpg" alt="SAE Achievement 2" loading="lazy">
                                 </div>
                                 <button class="slideshow-arrows prev-arrow" aria-label="Previous slide">❮</button>
                                 <button class="slideshow-arrows next-arrow" aria-label="Next slide">❯</button>
@@ -970,8 +1089,14 @@ h2 {
                 <div class="achievement-content">
                     <div class="achievements-container">
                         <div class="rank-container">
+                            <div>
                             <p class="Air">AIR</p>
                             <h1 class="Rank">12</h1>
+                            </div>
+                            <div>
+                                <p class="Air">AIR</p>
+                                <h1 class="Rank">12</h1>
+                            </div>
                         </div>
                         <div class="rank-contents">
                             <p>Overall Performance</p>
@@ -979,10 +1104,10 @@ h2 {
                         <div class="image-container">
                             <div class="slideshow-container" data-slideshow-id="3" role="region" aria-label="Achievement slideshow">
                                 <div class="slide active">
-                                    <img src="our legacy/18-1.jpg" alt="SAE Achievement 1" loading="lazy">
+                                    <img src="our_legacy/18-1.jpg" alt="SAE Achievement 1" loading="lazy">
                                 </div>
                                 <div class="slide">
-                                    <img src="our legacy/18-2.jpg" alt="SAE Achievement 2" loading="lazy">
+                                    <img src="our_legacy/18-2.jpg" alt="SAE Achievement 2" loading="lazy">
                                 </div>
                                 <button class="slideshow-arrows prev-arrow" aria-label="Previous slide">❮</button>
                                 <button class="slideshow-arrows next-arrow" aria-label="Next slide">❯</button>
@@ -1023,7 +1148,7 @@ h2 {
                 </div>
 
                 <!-- Quick Links -->
-                <div class="footer-section">
+                <div class="footer-section footer-only-desktop">
                     <h3>Quick Links</h3>
                     <ul>
                         <li><a href="/index.html">Home</a></li>
@@ -1059,6 +1184,9 @@ h2 {
                 <div class="footer-bottom-content">
                     <div>
                         <p style="text-align: center;">&copy; 2025 SPCE WAVE. All rights reserved.<br></p>
+                        <a href="/credits.html" style="text-align: left;"><br>Credits</a>
+                    </div>
+                    <div>
                     </div>
                 </div>
             </div>
@@ -1114,80 +1242,229 @@ h2 {
             }
         });
 
+        // // Slideshow functionality
+        // document.querySelectorAll('.slideshow-container').forEach((container) => {
+        //     const slides = container.querySelectorAll('.slide');
+        //     const dots = container.querySelectorAll('.nav-dot');
+        //     let currentIndex = 0;
+        //     const total = slides.length;
+
+        //     function showSlide(index) {
+        //         slides.forEach(slide => slide.classList.remove('active'));
+        //         dots.forEach(dot => dot.classList.remove('active'));
+        //         slides[index].classList.add('active');
+        //         dots[index].classList.add('active');
+        //     }
+
+        //     function changeSlide(dir) {
+        //         currentIndex = (currentIndex + dir + total) % total;
+        //         showSlide(currentIndex);
+        //     }
+
+        //     function setSlide(index) {
+        //         currentIndex = index - 1;
+        //         showSlide(currentIndex);
+        //     }
+
+        //     const prevArrow = container.querySelector('.prev-arrow');
+        //     const nextArrow = container.querySelector('.next-arrow');
+
+        //     if (prevArrow) prevArrow.addEventListener('click', () => changeSlide(-1));
+        //     if (nextArrow) nextArrow.addEventListener('click', () => changeSlide(1));
+
+        //     dots.forEach(dot => {
+        //         dot.addEventListener('click', () => setSlide(parseInt(dot.dataset.slide)));
+        //     });
+
+        //     // Keyboard navigation for slideshow
+        //     container.addEventListener('keydown', (e) => {
+        //         if (e.key === 'ArrowLeft') changeSlide(-1);
+        //         if (e.key === 'ArrowRight') changeSlide(1);
+        //     });
+
+        //     // Auto-slide only when visible
+        //     let intervalId = setInterval(() => changeSlide(1), 5000);
+        //     const slideObserver = new IntersectionObserver((entries) => {
+        //         entries.forEach(entry => {
+        //             if (!entry.isIntersecting) {
+        //                 clearInterval(intervalId);
+        //             } else {
+        //                 intervalId = setInterval(() => changeSlide(1), 5000);
+        //             }
+        //         });
+        //     }, { threshold: 0.1 });
+        //     slideObserver.observe(container);
+        // });
+
+        // // Scroll animation for achievements
+        // const observer = new IntersectionObserver((entries) => {
+        //     entries.forEach(entry => {
+        //         if (entry.isIntersecting) {
+        //             entry.target.classList.add('visible');
+        //         }
+        //     });
+        // }, { threshold: 0.1 });
+
+        // document.querySelectorAll('.achievement').forEach(achievement => {
+        //     observer.observe(achievement);
+        // });
+
+        // // Toggle functionality for achievements
+        // document.querySelectorAll('.achievement h2').forEach(header => {
+        //     header.addEventListener('click', () => {
+        //         const achievement = header.parentElement;
+        //         achievement.classList.toggle('collapsed');
+        //     });
+        // });
         // Slideshow functionality
-        document.querySelectorAll('.slideshow-container').forEach((container) => {
-            const slides = container.querySelectorAll('.slide');
-            const dots = container.querySelectorAll('.nav-dot');
-            let currentIndex = 0;
-            const total = slides.length;
+document.querySelectorAll('.slideshow-container').forEach((container) => {
+  const slides = container.querySelectorAll('.slide');
+  const dots = container.querySelectorAll('.nav-dot');
+  let currentIndex = 0;
+  const total = slides.length;
 
-            function showSlide(index) {
-                slides.forEach(slide => slide.classList.remove('active'));
-                dots.forEach(dot => dot.classList.remove('active'));
-                slides[index].classList.add('active');
-                dots[index].classList.add('active');
-            }
+  // Touch/swipe variables
+  let startX = 0;
+  let endX = 0;
+  let isDragging = false;
+  const minSwipeDistance = 50; // Minimum distance for a swipe to register
 
-            function changeSlide(dir) {
-                currentIndex = (currentIndex + dir + total) % total;
-                showSlide(currentIndex);
-            }
+  function showSlide(index) {
+    slides.forEach(slide => slide.classList.remove('active'));
+    dots.forEach(dot => dot.classList.remove('active'));
+    slides[index].classList.add('active');
+    dots[index].classList.add('active');
+  }
 
-            function setSlide(index) {
-                currentIndex = index - 1;
-                showSlide(currentIndex);
-            }
+  function changeSlide(dir) {
+    currentIndex = (currentIndex + dir + total) % total;
+    showSlide(currentIndex);
+  }
 
-            const prevArrow = container.querySelector('.prev-arrow');
-            const nextArrow = container.querySelector('.next-arrow');
+  function setSlide(index) {
+    currentIndex = index - 1;
+    showSlide(currentIndex);
+  }
 
-            if (prevArrow) prevArrow.addEventListener('click', () => changeSlide(-1));
-            if (nextArrow) nextArrow.addEventListener('click', () => changeSlide(1));
+  // Arrow navigation
+  const prevArrow = container.querySelector('.prev-arrow');
+  const nextArrow = container.querySelector('.next-arrow');
+  if (prevArrow) prevArrow.addEventListener('click', () => changeSlide(-1));
+  if (nextArrow) nextArrow.addEventListener('click', () => changeSlide(1));
 
-            dots.forEach(dot => {
-                dot.addEventListener('click', () => setSlide(parseInt(dot.dataset.slide)));
-            });
+  // Dot navigation
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => setSlide(parseInt(dot.dataset.slide)));
+  });
 
-            // Keyboard navigation for slideshow
-            container.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowLeft') changeSlide(-1);
-                if (e.key === 'ArrowRight') changeSlide(1);
-            });
+  // Keyboard navigation for slideshow
+  container.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') changeSlide(-1);
+    if (e.key === 'ArrowRight') changeSlide(1);
+  });
 
-            // Auto-slide only when visible
-            let intervalId = setInterval(() => changeSlide(1), 5000);
-            const slideObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting) {
-                        clearInterval(intervalId);
-                    } else {
-                        intervalId = setInterval(() => changeSlide(1), 5000);
-                    }
-                });
-            }, { threshold: 0.1 });
-            slideObserver.observe(container);
-        });
+  // Touch/swipe event handlers
+  container.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+  }, { passive: true });
 
-        // Scroll animation for achievements
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
+  container.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    endX = e.touches[0].clientX;
+  }, { passive: true });
 
-        document.querySelectorAll('.achievement').forEach(achievement => {
-            observer.observe(achievement);
-        });
+  container.addEventListener('touchend', (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    
+    const swipeDistance = startX - endX;
+    
+    if (Math.abs(swipeDistance) > minSwipeDistance) {
+      if (swipeDistance > 0) {
+        // Swiped left - go to next slide
+        changeSlide(1);
+      } else {
+        // Swiped right - go to previous slide
+        changeSlide(-1);
+      }
+    }
+    
+    // Reset values
+    startX = 0;
+    endX = 0;
+  }, { passive: true });
 
-        // Toggle functionality for achievements
-        document.querySelectorAll('.achievement h2').forEach(header => {
-            header.addEventListener('click', () => {
-                const achievement = header.parentElement;
-                achievement.classList.toggle('collapsed');
-            });
-        });
+  // Mouse drag support for desktop (optional)
+  container.addEventListener('mousedown', (e) => {
+    startX = e.clientX;
+    isDragging = true;
+    container.style.cursor = 'grabbing';
+  });
+
+  container.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    endX = e.clientX;
+  });
+
+  container.addEventListener('mouseup', (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    container.style.cursor = 'grab';
+    
+    const swipeDistance = startX - endX;
+    
+    if (Math.abs(swipeDistance) > minSwipeDistance) {
+      if (swipeDistance > 0) {
+        changeSlide(1);
+      } else {
+        changeSlide(-1);
+      }
+    }
+    
+    startX = 0;
+    endX = 0;
+  });
+
+  // Prevent context menu on long press (mobile)
+  container.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+  });
+
+  // Auto-slide only when visible
+  let intervalId = setInterval(() => changeSlide(1), 5000);
+  const slideObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) {
+        clearInterval(intervalId);
+      } else {
+        intervalId = setInterval(() => changeSlide(1), 5000);
+      }
+    });
+  }, { threshold: 0.1 });
+  slideObserver.observe(container);
+});
+
+// Scroll animation for achievements
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.achievement').forEach(achievement => {
+  observer.observe(achievement);
+});
+
+// Toggle functionality for achievements
+document.querySelectorAll('.achievement h2').forEach(header => {
+  header.addEventListener('click', () => {
+    const achievement = header.parentElement;
+    achievement.classList.toggle('collapsed');
+  });
+});
     </script>
 </body>
 </html>

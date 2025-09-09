@@ -468,14 +468,6 @@ body.menu-open .vbp-header-menu-button__svg .bottom {
         color: rgba(255, 255, 255, 0.8);
     }
 
-    .footer-bottom-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        /* flex-wrap: wrap; */
-        gap: 20px;
-    }
-
     .footer-links {
         display: flex;
         gap: 30px;
@@ -589,6 +581,23 @@ body.menu-open .vbp-header-menu-button__svg .bottom {
     .lightbox-next {
         right: -60px;
     }
+
+    .footer-only-desktop {
+        display: none;
+    }
+
+    .contact-info i {
+        margin: 0;
+    }
+
+    .footer-top {
+        display: flex;
+        flex-direction: column;
+    }
+    .footer-bottom {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 @media (max-width: 480px) {
@@ -678,7 +687,7 @@ body.menu-open .vbp-header-menu-button__svg .bottom {
                 </div>
 
                 <!-- Quick Links -->
-                <div class="footer-section">
+                <div class="footer-section footer-only-desktop">
                     <h3>Quick Links</h3>
                     <ul>
                         <li><a href="/index.html">Home</a></li>
@@ -714,6 +723,9 @@ body.menu-open .vbp-header-menu-button__svg .bottom {
                 <div class="footer-bottom-content">
                     <div>
                         <p style="text-align: center;">&copy; 2025 SPCE WAVE. All rights reserved.<br></p>
+                        <a href="/credits.html" style="text-align: left; color: rgba(255, 255, 255, 0.8);"><br>Credits</a>
+                    </div>
+                    <div>
                     </div>
                 </div>
             </div>

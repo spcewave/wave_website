@@ -504,14 +504,6 @@ h2 {
         color: rgba(255, 255, 255, 0.8);
     }
 
-    .footer-bottom-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        /* flex-wrap: wrap; */
-        gap: 20px;
-    }
-
     .footer-links {
         display: flex;
         gap: 30px;
@@ -624,6 +616,22 @@ h2 {
         font-size: 2.5rem;
         margin-top: 100px;
     }
+    .footer-only-desktop {
+        display: none;
+    }
+
+    .contact-info i {
+        margin: 0;
+    }
+
+    .footer-top {
+        display: flex;
+        flex-direction: column;
+    }
+    .footer-bottom {
+        display: flex;
+        flex-direction: column;
+    }
 }
 </style>
 
@@ -699,7 +707,7 @@ h2 {
                 </div>
 
                 <!-- Quick Links -->
-                <div class="footer-section">
+                <div class="footer-section footer-only-desktop">
                     <h3>Quick Links</h3>
                     <ul>
                         <li><a href="/index.html">Home</a></li>
@@ -735,6 +743,9 @@ h2 {
                 <div class="footer-bottom-content">
                     <div>
                         <p style="text-align: center;">&copy; 2025 SPCE WAVE. All rights reserved.<br></p>
+                        <a href="/credits.html" style="text-align: left; color: rgba(255, 255, 255, 0.8);"><br>Credits</a>
+                    </div>
+                    <div>
                     </div>
                 </div>
             </div>

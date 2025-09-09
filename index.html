@@ -407,21 +407,27 @@
             justify-content: center;
             align-items: center;
             height: 100%;
-            width: 150%;
+            width: 80vw;
             overflow: hidden;
         }
 
         .slider-items {
             display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 80vw;
+            justify-content: left;
+            align-items: left;
             gap: 20px;
             animation: scrolling 20s linear infinite;
+            flex-wrap: wrap;
         }
 
         .slider-items img {
-            height: 5rem;
+            max-height: 4.5rem;
             margin: 20px;
+            /* width: auto; */
+            /* max-width: 100%; */
+            object-fit: contain;
+            flex-shrink: 1;
         }
 
         .live {
@@ -606,14 +612,6 @@
             color: rgba(255, 255, 255, 0.8);
         }
 
-        .footer-bottom-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
         .footer-links {
             display: flex;
             gap: 30px;
@@ -629,12 +627,6 @@
 
         .footer-links a:hover {
             color: #00c8ff;
-        }
-
-        @media (max-width: 768px) {
-            .footer {
-                display: none !important;
-            }
         }
 
 
@@ -716,6 +708,24 @@
                 100% {
                     transform: translateX(-20%);
                 }
+            }
+
+            .footer-only-desktop {
+                display: none;
+            }
+
+            .contact-info i {
+                margin: 0;
+            }
+
+            .footer-top {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .footer-bottom {
+                display: flex;
+                flex-direction: column;
             }
         }
     </style>
@@ -847,8 +857,7 @@
                         <a href="https://www.instagram.com/spcew.a.v.e/" class="social-link" aria-label="Instagram">
                             <i class="fa-brands fa-instagram"></i>
                         </a>
-                        <a href="https://in.linkedin.com/company/spce-w-a-v-e" class="social-link"
-                            aria-label="LinkedIn">
+                        <a href="https://in.linkedin.com/company/spce-w-a-v-e" class="social-link" aria-label="LinkedIn">
                             <i class="fa-brands fa-linkedin-in"></i>
                         </a>
                         <a href="https://www.facebook.com/SPCEWAVE/" class="social-link" aria-label="Facebook">
@@ -861,14 +870,14 @@
                 </div>
 
                 <!-- Quick Links -->
-                <div class="footer-section">
+                <div class="footer-section footer-only-desktop">
                     <h3>Quick Links</h3>
                     <ul>
                         <li><a href="/index.html">Home</a></li>
                         <li><a href="/team.html">Team</a></li>
                         <li><a href="/gallery.html">Gallery</a></li>
                         <li><a href="/sponsors.html">Sponsors</a></li>
-                        <li><a href="/support.html">Support Us</a></li>
+                        <li><a href="/support.html">Gallery</a></li>
                         <li><a href="/legacy.html">Our Legacy</a></li>
                     </ul>
                 </div>
@@ -882,14 +891,11 @@
                     </div>
                     <div class="contact-info">
                         <i class="fa-solid fa-phone"></i>
-                        <span>+91 99206 35938
-
-                        </span>
+                        <span>+91 99206 35938   </span>
                     </div>
                     <div class="contact-info">
                         <i class="fa-solid fa-location-dot"></i>
-                        <span>Sardar Patel College of Engineering<br>Bhavan's Campus <br>Andheri (W), Mumbai -
-                            400058</span>
+                        <span>Sardar Patel College of Engineering<br>Bhavan's Campus <br>Andheri (W), Mumbai - 400058</span>
                     </div>
                 </div>
             </div>
@@ -900,6 +906,9 @@
                 <div class="footer-bottom-content">
                     <div>
                         <p style="text-align: center;">&copy; 2025 SPCE WAVE. All rights reserved.<br></p>
+                        <a href="/credits.html" style="text-align: left; color: rgba(255, 255, 255, 0.8);"><br>Credits</a>
+                    </div>
+                    <div>
                     </div>
                 </div>
             </div>
