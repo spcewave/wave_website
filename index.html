@@ -15,6 +15,19 @@
             --accent-color: #3a86ff;
         }
 
+        @media (min-width: 1024px) {
+            @supports (zoom:1) {
+                html {zoom: 0.8; }
+            }
+            @supports not (zoom:1) {
+                .site-wrapper {
+                    transform-origin: 0.0;
+                    transform: sclae(0.8);
+                    width: calc(100 / 0.8);
+                }
+            }
+        }
+
         * {
             margin: 0;
             padding: 0;
